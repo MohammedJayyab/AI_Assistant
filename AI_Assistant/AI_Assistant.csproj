@@ -9,7 +9,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LLMKit" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.5" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="LLMKit">
+      <HintPath>..\..\..\LLMOrchestratorApp\LLMKitLib\bin\Debug\net8.0\LLMKit.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+	<ItemGroup>
+		<None Update="appsettings.example.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="appsettings.Local.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>
