@@ -1,16 +1,15 @@
 using LLMKit;
-using LLMKit.Models;
 using LLMKit.Providers;
 using Microsoft.Extensions.Configuration;
-using System.Diagnostics;
-using System.Net;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
+using Microsoft.Web.WebView2.WinForms;
 
 namespace AI_Assistant
 {
     public partial class frmAssistant : Form
     {
+        private WebView2 webView;
+        private string accumulatedHtml = string.Empty; // To store the accumulated HTML content
+
         public static string GetTempImagesFolderPath()
         {
             // Get the base directory of the application (usually the bin folder or a subfolder within it)
@@ -24,7 +23,7 @@ namespace AI_Assistant
 
         private static string _apiKey, _model;
         private static string _systemMessage = SystemMessagesConstants.DefaultSystemMessage;
-        private string _defaultLanguage = "ar";
+        private string _defaultLanguage = "Arabic";
 
         private LLMClient _client;
 
@@ -32,6 +31,27 @@ namespace AI_Assistant
         {
             InitializeComponent();
             InitModel();
+
+            InitializeWebView();
+        }
+
+        private async void InitializeWebView()
+        {
+            webView = new WebView2();
+            pnlBody.Controls.Add(webView);
+            webView.BackColor = Color.Green;
+            webView.BringToFront();
+            webView.Dock = DockStyle.Fill;
+            await webView.EnsureCoreWebView2Async();
+        }
+
+        public async void PreviewHtml(string htmlContent)
+        {
+            if (webView != null && webView.CoreWebView2 != null)
+            {
+                webView.CoreWebView2.NavigateToString(htmlContent);
+                await webView.CoreWebView2.ExecuteScriptAsync("window.scrollTo(0, document.documentElement.scrollHeight);");
+            }
         }
 
         private void InitModel()
@@ -53,7 +73,7 @@ namespace AI_Assistant
                 throw new Exception("Model is missing in appsettings.json");
             }
 
-            _client = new LLMClient(new GeminiProvider(_apiKey, _model), 1024, 0.3, 25);
+            _client = new LLMClient(new GeminiProvider(_apiKey, _model), 6144, 0.3, 25);
             _client.SetSystemMessage(_systemMessage);
         }
 
@@ -90,6 +110,7 @@ namespace AI_Assistant
                 }
 
                 AddToResponse($"Assistant >>  {response.Trim()}");
+
                 txtPrompt.Clear();
                 txtPrompt.Focus();
             }
@@ -108,27 +129,55 @@ namespace AI_Assistant
         private void btnNew_Click(object sender, EventArgs e)
         {
             _systemMessage = SystemMessagesConstants.DefaultSystemMessage;
+            accumulatedHtml = string.Empty; // Reset the accumulated HTML content
             _client.ClearConversation();
-            txtResponse.Clear();
+            webView.CoreWebView2.NavigateToString("<html><body></body></html>");
+
             txtPrompt.Clear();
             txtPrompt.Focus();
             txtPrompt.Enabled = true;
             txtPrompt.SelectAll();
         }
 
+        /*
+         * private void AddToResponse(string text)
+         {
+             if (txtResponse.InvokeRequired)
+             {
+                 txtResponse.Invoke(new Action(() => txtResponse.AppendText(text)));
+             }
+             else
+             {
+                 txtResponse.AppendText(text);
+                 txtResponse.AppendText(Environment.NewLine);
+
+                 txtResponse.ScrollToCaret();
+             }
+         }
+          */
+
         private void AddToResponse(string text)
         {
-            if (txtResponse.InvokeRequired)
+            string cleanedText = text.Replace("```html", "").Replace("```", "").Replace("`", "");
+            string formattedText = cleanedText;
+
+            if (cleanedText.StartsWith("You:"))
             {
-                txtResponse.Invoke(new Action(() => txtResponse.AppendText(text)));
+                string userText = cleanedText.Trim();
+                if (userText.Length > 550)
+                {
+                    userText = userText.Substring(0, 500) + "........";
+                }
+                formattedText = $"<div style=\"text-align: right; background-color: #f0f0f0; padding: 8px; border-radius: 4px; margin-bottom: 6px;\">{userText}</div>";
             }
             else
             {
-                txtResponse.AppendText(text);
-                txtResponse.AppendText(Environment.NewLine);
-
-                txtResponse.ScrollToCaret();
+                formattedText = cleanedText.Replace("Assistant >>", "<strong style=\"color: #4285f4;\">Answer:</strong>");
+                formattedText = $"<div style=\"margin-bottom: 6px;\">{formattedText}</div>"; // Add a little spacing
             }
+
+            accumulatedHtml += formattedText;
+            PreviewHtml(accumulatedHtml);
         }
 
         private void btnUpdateSize_Click(object sender, EventArgs e)
@@ -248,7 +297,7 @@ namespace AI_Assistant
         {
             _systemMessage = SystemMessagesConstants.ImageSystemMessage;
             _client.SetSystemMessage(_systemMessage);
-            txtPrompt.Text = "Explain the image attached, if it has question or code challanges then also provide a solution.";
+            txtPrompt.Text = "Please explain the attached image.";
             await GetResponseAsync(txtPrompt.Text.Trim(), true);
         }
 
@@ -260,7 +309,7 @@ namespace AI_Assistant
 
             _systemMessage = SystemMessagesConstants.ImageSystemMessage;
             _client.SetSystemMessage(_systemMessage);
-            txtPrompt.Text = "Explain the image attached, if it has question or code challanges then also provide a solution.";
+            txtPrompt.Text = "Please explain the attached image.";
 
             await GetResponseAsync(txtPrompt.Text.Trim(), true);
         }

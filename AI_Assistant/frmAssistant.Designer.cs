@@ -31,7 +31,6 @@
             btnSend = new Button();
             label1 = new Label();
             label2 = new Label();
-            txtResponse = new TextBox();
             txtPrompt = new TextBox();
             btnNew = new Button();
             btnUpdateSize = new Button();
@@ -62,7 +61,7 @@
             // 
             btnSend.Dock = DockStyle.Right;
             btnSend.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnSend.Location = new Point(1875, 3);
+            btnSend.Location = new Point(1910, 3);
             btnSend.Name = "btnSend";
             btnSend.Size = new Size(120, 218);
             btnSend.TabIndex = 0;
@@ -92,19 +91,6 @@
             label2.TabIndex = 1;
             label2.Text = "LLM Response:";
             // 
-            // txtResponse
-            // 
-            txtResponse.BackColor = Color.FromArgb(243, 243, 243);
-            txtResponse.Dock = DockStyle.Fill;
-            txtResponse.Font = new Font("Segoe UI", 14F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txtResponse.Location = new Point(3, 41);
-            txtResponse.Multiline = true;
-            txtResponse.Name = "txtResponse";
-            txtResponse.ReadOnly = true;
-            txtResponse.ScrollBars = ScrollBars.Vertical;
-            txtResponse.Size = new Size(1992, 675);
-            txtResponse.TabIndex = 2;
-            // 
             // txtPrompt
             // 
             txtPrompt.BackColor = SystemColors.Info;
@@ -114,7 +100,7 @@
             txtPrompt.Multiline = true;
             txtPrompt.Name = "txtPrompt";
             txtPrompt.ScrollBars = ScrollBars.Vertical;
-            txtPrompt.Size = new Size(1805, 218);
+            txtPrompt.Size = new Size(1840, 218);
             txtPrompt.TabIndex = 3;
             txtPrompt.KeyDown += txtPrompt_KeyDown;
             // 
@@ -131,7 +117,7 @@
             // btnUpdateSize
             // 
             btnUpdateSize.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnUpdateSize.Location = new Point(1802, 16);
+            btnUpdateSize.Location = new Point(7777, 16);
             btnUpdateSize.Name = "btnUpdateSize";
             btnUpdateSize.Size = new Size(185, 52);
             btnUpdateSize.TabIndex = 5;
@@ -163,7 +149,7 @@
             pnlHeader.Dock = DockStyle.Top;
             pnlHeader.Location = new Point(3, 3);
             pnlHeader.Name = "pnlHeader";
-            pnlHeader.Size = new Size(1998, 162);
+            pnlHeader.Size = new Size(2033, 162);
             pnlHeader.TabIndex = 6;
             // 
             // lnkBrowsImg
@@ -327,14 +313,14 @@
             // 
             // pnlBody
             // 
+            pnlBody.AutoScroll = true;
             pnlBody.BackColor = Color.LightGray;
-            pnlBody.Controls.Add(txtResponse);
             pnlBody.Controls.Add(label2);
             pnlBody.Dock = DockStyle.Fill;
             pnlBody.Location = new Point(3, 165);
             pnlBody.Name = "pnlBody";
             pnlBody.Padding = new Padding(3);
-            pnlBody.Size = new Size(1998, 719);
+            pnlBody.Size = new Size(2033, 753);
             pnlBody.TabIndex = 7;
             // 
             // pnlFooter
@@ -344,21 +330,20 @@
             pnlFooter.Controls.Add(btnSend);
             pnlFooter.Controls.Add(label1);
             pnlFooter.Dock = DockStyle.Bottom;
-            pnlFooter.Location = new Point(3, 884);
+            pnlFooter.Location = new Point(3, 918);
             pnlFooter.Name = "pnlFooter";
             pnlFooter.Padding = new Padding(3);
-            pnlFooter.Size = new Size(1998, 224);
+            pnlFooter.Size = new Size(2033, 224);
             pnlFooter.TabIndex = 8;
             // 
             // frmAssistant
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(2004, 1111);
+            ClientSize = new Size(2039, 1145);
             Controls.Add(pnlBody);
             Controls.Add(pnlFooter);
             Controls.Add(pnlHeader);
-            MaximizeBox = false;
             Name = "frmAssistant";
             Padding = new Padding(3);
             StartPosition = FormStartPosition.CenterScreen;
@@ -378,7 +363,6 @@
         private Button btnSend;
         private Label label1;
         private Label label2;
-        private TextBox txtResponse;
         private TextBox txtPrompt;
         private Button btnNew;
         private Button btnUpdateSize;
