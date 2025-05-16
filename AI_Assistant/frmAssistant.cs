@@ -4,15 +4,9 @@ namespace AI_Assistant
 {
     public partial class frmAssistant : Form
     {
-        private WebView2 webView;
-        private string accumulatedHtml = string.Empty;
-
-        //private static string _apiKey = string.Empty, _model = string.Empty;
-        private static string _systemMessage = Constants.SystemMessages.Default;
-
+        private WebView2 _webView;
+        private string _accumulatedHtml = string.Empty;
         private string _defaultLanguage = Constants.Language.Arabic.ToString();
-
-        //private LLMClient _client;
         private LLMModel _llmModel;
 
         public frmAssistant()
@@ -21,24 +15,33 @@ namespace AI_Assistant
             InitModel();
 
             InitializeWebView();
+            EnableButtons();
         }
 
         private async void InitializeWebView()
         {
-            webView = new WebView2();
-            pnlBody.Controls.Add(webView);
-            webView.BackColor = Color.Green;
-            webView.BringToFront();
-            webView.Dock = DockStyle.Fill;
-            await webView.EnsureCoreWebView2Async();
+            _webView = new WebView2();
+            pnlBody.Controls.Add(_webView);
+            _webView.BringToFront();
+            _webView.Dock = DockStyle.Fill;
+            await _webView.EnsureCoreWebView2Async();
+        }
+
+        private void frmAssistant_Load(object sender, EventArgs e)
+        {
+            this.BeginInvoke(new Action(() =>
+            {
+                txtPrompt.Focus();
+                txtPrompt.SelectAll();
+            }));
         }
 
         public async void PreviewHtml(string htmlContent)
         {
-            if (webView != null && webView.CoreWebView2 != null)
+            if (_webView != null && _webView.CoreWebView2 != null)
             {
-                webView.CoreWebView2.NavigateToString(htmlContent);
-                await webView.CoreWebView2.ExecuteScriptAsync("window.scrollTo(0, document.documentElement.scrollHeight);");
+                _webView.CoreWebView2.NavigateToString(htmlContent);
+                await _webView.CoreWebView2.ExecuteScriptAsync("window.scrollTo(0, document.documentElement.scrollHeight);");
             }
         }
 
@@ -50,21 +53,16 @@ namespace AI_Assistant
             lblLLM.Text = $"LLM: {_llmModel.ProviderWithModel}";
         }
 
-        private async void btnSend_Click(object sender, EventArgs e)
-        {
-            await GetResponseAsync(txtPrompt.Text.Trim());
-        }
-
         private async Task GetResponseAsync(string prompt, bool isForImage = false)
         {
             try
 
             {
-                txtPrompt.Enabled = false;
                 if (string.IsNullOrEmpty(txtPrompt.Text.Trim()))
                 {
                     return;
                 }
+                txtPrompt.Enabled = false;
 
                 AddToResponse($"You: {txtPrompt.Text.Trim()}");
                 string response = string.Empty;
@@ -101,10 +99,11 @@ namespace AI_Assistant
 
         private void btnNew_Click(object sender, EventArgs e)
         {
-            _systemMessage = Constants.SystemMessages.Default;
-            accumulatedHtml = string.Empty; // Reset the accumulated HTML content
+            EnableButtons();
+            _accumulatedHtml = string.Empty; // Reset the accumulated HTML content
             _llmModel.Client.ClearConversation();
-            webView.CoreWebView2.NavigateToString("<html><body></body></html>");
+            _llmModel.Client.SetSystemMessage(Constants.SystemMessages.Default);
+            _webView.CoreWebView2.NavigateToString("<html><body></body></html>");
 
             txtPrompt.Clear();
             txtPrompt.Focus();
@@ -132,36 +131,11 @@ namespace AI_Assistant
                 formattedText = $"<div style=\"margin-bottom: 6px;\">{formattedText}</div>"; // Add a little spacing
             }
 
-            accumulatedHtml += formattedText;
-            PreviewHtml(accumulatedHtml);
+            _accumulatedHtml += formattedText;
+            PreviewHtml(_accumulatedHtml);
         }
 
-        private void btnUpdateSize_Click(object sender, EventArgs e)
-        {
-            int defaultSize = _llmModel.Client.GetMaxMessages();
-            var input = Microsoft.VisualBasic.Interaction.InputBox("Enter the new size (2-100):", "Update Size", defaultSize.ToString());
-
-            // User pressed Cancel or left it empty
-            if (string.IsNullOrWhiteSpace(input))
-                return;
-
-            if (int.TryParse(input, out int newSize))
-            {
-                if (newSize < 2 || newSize > 100)
-                {
-                    MessageBox.Show("Size must be between 2 and 100.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                _llmModel.Client.UpdateMaxMessages(newSize);
-            }
-            else
-            {
-                MessageBox.Show("Invalid size. Please enter a valid number.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void txtPrompt_KeyDown(object sender, KeyEventArgs e)
+        private async void txtPrompt_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.Shift)
             {
@@ -172,87 +146,61 @@ namespace AI_Assistant
             {
                 // Prevent the default behavior of the Enter key
                 e.SuppressKeyPress = true;
-                btnSend_Click(sender, e);
+                await GetResponseAsync(txtPrompt.Text.Trim());
             }
         }
 
-        private void frmAssistant_Load(object sender, EventArgs e)
+        private async void btnSend_Click(object sender, EventArgs e)
         {
-            this.BeginInvoke(new Action(() =>
-            {
-                txtPrompt.Focus();
-                txtPrompt.SelectAll();
-            }));
+            _llmModel.Client.SetSystemMessage(Constants.SystemMessages.Default);
+            await GetResponseAsync(txtPrompt.Text.Trim());
         }
 
-        private void btnStandard_Click(object sender, EventArgs e)
+        private async void btnSummarize_Click(object sender, EventArgs e)
         {
-            _systemMessage = Constants.SystemMessages.Default;
-            _llmModel.Client.SetSystemMessage(_systemMessage);
-            txtPrompt.Text = "Here is my prompt: \n\n" + txtPrompt.Text;
-            btnSend_Click(sender, e);
-        }
-
-        private void btnSummarize_Click(object sender, EventArgs e)
-        {
-            _systemMessage = Constants.SystemMessages.Summarize;
-            _llmModel.Client.SetSystemMessage(_systemMessage);
+            _llmModel.Client.SetSystemMessage(Constants.SystemMessages.Summarize);
             txtPrompt.Text = "Summarize the following text: \n\n" + txtPrompt.Text;
-            btnSend_Click(sender, e);
+            await GetResponseAsync(txtPrompt.Text.Trim());
         }
 
-        private void btnTranslate_Click(object sender, EventArgs e)
+        private async void btnTranslate_Click(object sender, EventArgs e)
         {
-            _systemMessage = Constants.SystemMessages.Translate;
-            _llmModel.Client.SetSystemMessage(_systemMessage);
+            _llmModel.Client.SetSystemMessage(Constants.SystemMessages.Translate);
             txtPrompt.Text = "Translate the following text to " + _defaultLanguage + ": \n\n" + txtPrompt.Text;
-            btnSend_Click(sender, e);
+            await GetResponseAsync(txtPrompt.Text.Trim());
         }
 
-        private void btnExplain_Click(object sender, EventArgs e)
+        private async void btnExplain_Click(object sender, EventArgs e)
         {
-            _systemMessage = Constants.SystemMessages.Explain;
-            _llmModel.Client.SetSystemMessage(_systemMessage);
+            _llmModel.Client.SetSystemMessage(Constants.SystemMessages.Explain);
             txtPrompt.Text = "Explain the following text: \n\n" + txtPrompt.Text;
-            btnSend_Click(sender, e);
+            await GetResponseAsync(txtPrompt.Text.Trim());
         }
 
-        private void btnOnlyKeyPoints_Click(object sender, EventArgs e)
+        private async void btnOnlyKeyPoints_Click(object sender, EventArgs e)
         {
-            _systemMessage = Constants.SystemMessages.KeyPoints;
-            _llmModel.Client.SetSystemMessage(_systemMessage);
+            _llmModel.Client.SetSystemMessage(Constants.SystemMessages.KeyPoints);
             txtPrompt.Text = "Extract the key points from the following text: \n\n" + txtPrompt.Text;
-            btnSend_Click(sender, e);
+            await GetResponseAsync(txtPrompt.Text.Trim());
         }
 
-        private void btnSearch_Click(object sender, EventArgs e)
+        private async void btnEmailResponse_Click(object sender, EventArgs e)
         {
-            _systemMessage = Constants.SystemMessages.Search;
-            _llmModel.Client.SetSystemMessage(_systemMessage);
-            txtPrompt.Text = "Search the following text: \n\n" + txtPrompt.Text;
-            btnSend_Click(sender, e);
-        }
-
-        private void btnEmailResponse_Click(object sender, EventArgs e)
-        {
-            _systemMessage = Constants.SystemMessages.EmailResponse;
-            _llmModel.Client.SetSystemMessage(_systemMessage);
+            _llmModel.Client.SetSystemMessage(Constants.SystemMessages.EmailResponse);
             txtPrompt.Text = "Write a professional response for the following email: \n\n" + txtPrompt.Text;
-            btnSend_Click(sender, e);
+            await GetResponseAsync(txtPrompt.Text.Trim());
         }
 
-        private void btnPrompt_Click(object sender, EventArgs e)
+        private async void btnPrompt_Click(object sender, EventArgs e)
         {
-            _systemMessage = Constants.SystemMessages.Prompt;
-            _llmModel.Client.SetSystemMessage(_systemMessage);
+            _llmModel.Client.SetSystemMessage(Constants.SystemMessages.Prompt);
             txtPrompt.Text = "Write a prompt for the following text: \n\n" + txtPrompt.Text;
-            btnSend_Click(sender, e);
+            await GetResponseAsync(txtPrompt.Text.Trim());
         }
 
         private async void btnImage_Click(object sender, EventArgs e)
         {
-            _systemMessage = Constants.SystemMessages.Image;
-            _llmModel.Client.SetSystemMessage(_systemMessage);
+            _llmModel.Client.SetSystemMessage(Constants.SystemMessages.Image);
             txtPrompt.Text = "Please explain the attached image.";
             await GetResponseAsync(txtPrompt.Text.Trim(), true);
         }
@@ -263,8 +211,7 @@ namespace AI_Assistant
             string imagePath = ImageHelper.SaveClipboardImageAsJpg(tempImagesPath);
             txtImageUrl.Text = imagePath;
 
-            _systemMessage = Constants.SystemMessages.Image;
-            _llmModel.Client.SetSystemMessage(_systemMessage);
+            _llmModel.Client.SetSystemMessage(Constants.SystemMessages.Image);
             txtPrompt.Text = "Please explain the attached image.";
 
             await GetResponseAsync(txtPrompt.Text.Trim(), true);
@@ -306,6 +253,25 @@ namespace AI_Assistant
             frmModelSettings.ShowDialog();
 
             InitModel();
+        }
+
+        private void EnableButtons()
+        {
+            bool enabled = !string.IsNullOrWhiteSpace(txtPrompt.Text);
+            btnSend.Enabled = enabled;
+            btnSummarize.Enabled = enabled;
+            btnTranslate.Enabled = enabled;
+            btnExplain.Enabled = enabled;
+            btnOnlyKeyPoints.Enabled = enabled;
+            btnEmailResponse.Enabled = enabled;
+            btnPrompt.Enabled = enabled;
+            btnImage.Enabled = enabled;
+            btnCaptureAndAskImage.Enabled = enabled;
+        }
+
+        private void txtPrompt_TextChanged(object sender, EventArgs e)
+        {
+            EnableButtons();
         }
     }
 }

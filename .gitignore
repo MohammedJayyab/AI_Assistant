@@ -4,6 +4,7 @@
 *.userosscache
 *.sln.docstates
 appsettings.Local.json
+appsettings.local.json
 appsettings.json
 
 

@@ -34,7 +34,6 @@
             lblLLM = new Label();
             txtPrompt = new TextBox();
             btnNew = new Button();
-            btnUpdateSize = new Button();
             pnlHeader = new Panel();
             btnSettings = new Button();
             lnkBrowsImg = new LinkLabel();
@@ -45,9 +44,7 @@
             radioDe = new RadioButton();
             radioEn = new RadioButton();
             radioAr = new RadioButton();
-            btnStandard = new Button();
             btnEmailResponse = new Button();
-            btnSearch = new Button();
             btnOnlyKeyPoints = new Button();
             btnExplain = new Button();
             btnTranslate = new Button();
@@ -63,7 +60,7 @@
             // 
             btnSend.Dock = DockStyle.Right;
             btnSend.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnSend.Location = new Point(1910, 3);
+            btnSend.Location = new Point(1969, 3);
             btnSend.Name = "btnSend";
             btnSend.Size = new Size(120, 218);
             btnSend.TabIndex = 0;
@@ -102,8 +99,9 @@
             txtPrompt.Multiline = true;
             txtPrompt.Name = "txtPrompt";
             txtPrompt.ScrollBars = ScrollBars.Vertical;
-            txtPrompt.Size = new Size(1840, 218);
+            txtPrompt.Size = new Size(1899, 218);
             txtPrompt.TabIndex = 3;
+            txtPrompt.TextChanged += txtPrompt_TextChanged;
             txtPrompt.KeyDown += txtPrompt_KeyDown;
             // 
             // btnNew
@@ -115,17 +113,6 @@
             btnNew.Text = "+ New Chat";
             btnNew.UseVisualStyleBackColor = true;
             btnNew.Click += btnNew_Click;
-            // 
-            // btnUpdateSize
-            // 
-            btnUpdateSize.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnUpdateSize.Location = new Point(7777, 16);
-            btnUpdateSize.Name = "btnUpdateSize";
-            btnUpdateSize.Size = new Size(185, 52);
-            btnUpdateSize.TabIndex = 5;
-            btnUpdateSize.Text = "Update Size";
-            btnUpdateSize.UseVisualStyleBackColor = true;
-            btnUpdateSize.Click += btnUpdateSize_Click;
             // 
             // pnlHeader
             // 
@@ -140,19 +127,16 @@
             pnlHeader.Controls.Add(radioDe);
             pnlHeader.Controls.Add(radioEn);
             pnlHeader.Controls.Add(radioAr);
-            pnlHeader.Controls.Add(btnStandard);
             pnlHeader.Controls.Add(btnEmailResponse);
-            pnlHeader.Controls.Add(btnSearch);
             pnlHeader.Controls.Add(btnOnlyKeyPoints);
             pnlHeader.Controls.Add(btnExplain);
             pnlHeader.Controls.Add(btnTranslate);
             pnlHeader.Controls.Add(btnSummarize);
             pnlHeader.Controls.Add(btnNew);
-            pnlHeader.Controls.Add(btnUpdateSize);
             pnlHeader.Dock = DockStyle.Top;
             pnlHeader.Location = new Point(3, 3);
             pnlHeader.Name = "pnlHeader";
-            pnlHeader.Size = new Size(2033, 162);
+            pnlHeader.Size = new Size(2092, 162);
             pnlHeader.TabIndex = 6;
             // 
             // btnSettings
@@ -185,7 +169,7 @@
             btnCaptureAndAskImage.Name = "btnCaptureAndAskImage";
             btnCaptureAndAskImage.Size = new Size(185, 51);
             btnCaptureAndAskImage.TabIndex = 19;
-            btnCaptureAndAskImage.Text = "P>>";
+            btnCaptureAndAskImage.Text = "Paste Image";
             btnCaptureAndAskImage.UseVisualStyleBackColor = false;
             btnCaptureAndAskImage.Click += btnCaptureAndAskImage_Click;
             // 
@@ -195,7 +179,7 @@
             txtImageUrl.Name = "txtImageUrl";
             txtImageUrl.Size = new Size(696, 31);
             txtImageUrl.TabIndex = 18;
-            txtImageUrl.Text = "C:\\Users\\mjayy\\source\\repos\\LLMOrchestratorApp\\LLMOrchestratorApp\\image.jpg";
+            txtImageUrl.Text = "C:\\";
             // 
             // btnImage
             // 
@@ -215,7 +199,7 @@
             btnPrompt.Name = "btnPrompt";
             btnPrompt.Size = new Size(185, 52);
             btnPrompt.TabIndex = 16;
-            btnPrompt.Text = "LLM Prompt";
+            btnPrompt.Text = "LLM Prompt </>";
             btnPrompt.UseVisualStyleBackColor = true;
             btnPrompt.Click += btnPrompt_Click;
             // 
@@ -256,16 +240,6 @@
             radioAr.UseVisualStyleBackColor = true;
             radioAr.CheckedChanged += radioAr_CheckedChanged;
             // 
-            // btnStandard
-            // 
-            btnStandard.Location = new Point(210, 16);
-            btnStandard.Name = "btnStandard";
-            btnStandard.Size = new Size(185, 52);
-            btnStandard.TabIndex = 12;
-            btnStandard.Text = "Standard";
-            btnStandard.UseVisualStyleBackColor = true;
-            btnStandard.Click += btnStandard_Click;
-            // 
             // btnEmailResponse
             // 
             btnEmailResponse.Location = new Point(1398, 16);
@@ -275,16 +249,6 @@
             btnEmailResponse.Text = "Response Email";
             btnEmailResponse.UseVisualStyleBackColor = true;
             btnEmailResponse.Click += btnEmailResponse_Click;
-            // 
-            // btnSearch
-            // 
-            btnSearch.Location = new Point(1200, 16);
-            btnSearch.Name = "btnSearch";
-            btnSearch.Size = new Size(185, 52);
-            btnSearch.TabIndex = 10;
-            btnSearch.Text = "Search";
-            btnSearch.UseVisualStyleBackColor = true;
-            btnSearch.Click += btnSearch_Click;
             // 
             // btnOnlyKeyPoints
             // 
@@ -335,7 +299,7 @@
             pnlBody.Location = new Point(3, 165);
             pnlBody.Name = "pnlBody";
             pnlBody.Padding = new Padding(3);
-            pnlBody.Size = new Size(2033, 753);
+            pnlBody.Size = new Size(2092, 753);
             pnlBody.TabIndex = 7;
             // 
             // pnlFooter
@@ -348,14 +312,14 @@
             pnlFooter.Location = new Point(3, 918);
             pnlFooter.Name = "pnlFooter";
             pnlFooter.Padding = new Padding(3);
-            pnlFooter.Size = new Size(2033, 224);
+            pnlFooter.Size = new Size(2092, 224);
             pnlFooter.TabIndex = 8;
             // 
             // frmAssistant
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(2039, 1145);
+            ClientSize = new Size(2098, 1145);
             Controls.Add(pnlBody);
             Controls.Add(pnlFooter);
             Controls.Add(pnlHeader);
@@ -381,16 +345,13 @@
         private Label lblLLM;
         private TextBox txtPrompt;
         private Button btnNew;
-        private Button btnUpdateSize;
         private Panel pnlHeader;
         private Panel pnlBody;
         private Panel pnlFooter;
         private Button btnSummarize;
-        private Button btnSearch;
         private Button btnOnlyKeyPoints;
         private Button btnExplain;
         private Button btnTranslate;
-        private Button btnStandard;
         private Button btnEmailResponse;
         private RadioButton radioDe;
         private RadioButton radioEn;

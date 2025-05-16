@@ -5,13 +5,13 @@ namespace AI_Assistant
 {
     public partial class frmModelSettings : Form
     {
-        private FileSystemWatcher _watcher;
+       
 
         public frmModelSettings()
         {
             InitializeComponent();
             InitJsonSetting();
-            InitFileWatcher();
+           
         }
 
         private void InitJsonSetting()
@@ -135,47 +135,8 @@ namespace AI_Assistant
         {
             InitJsonSetting();
         }
+               
 
-        private void InitFileWatcher()
-        {
-            string filePath = Path.Combine(AppContext.BaseDirectory, Constants.LLM.AppSettingsJsonFile);
-
-            _watcher = new FileSystemWatcher
-            {
-                Path = Path.GetDirectoryName(filePath),
-                Filter = Path.GetFileName(filePath),
-                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size,
-                EnableRaisingEvents = true
-            };
-
-            _watcher.Changed += (s, e) =>
-            {
-                // Avoid multiple triggers by debouncing
-                Thread.Sleep(200); // Delay to ensure file write completion
-
-                this.Invoke(new Action(() =>
-                {
-                    try
-                    {
-                        InitJsonSetting();
-                        //MessageBox.Show("Settings file was updated externally. Changes reloaded.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Error reloading settings. File may be invalid.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }));
-            };
-        }
-
-        private void frmModelSettings_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (_watcher != null)
-            {
-                _watcher.EnableRaisingEvents = false;
-                _watcher.Dispose();
-                _watcher = null;
-            }
-        }
+      
     }
 }

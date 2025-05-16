@@ -22,7 +22,7 @@ namespace AI_Assistant
             public const string EmailResponse = $"{BasePrefix}. Write a professional simple but accurate response for the provided email.";
             public const string Prompt = $"{BasePrefix}. Generate a professional well structured prompt, that will be used by LLM AI for the provided text.";
             public const string Code = $"{BasePrefix}. Write a code for the provided text.";
-            public const string Image = $"{BasePrefix}. Please explain the attached image, ** IMPORTANT** :If the image has question or code challanges then please also provide a fully solution, fully implemented source code.";
+            public const string Image = $"{BasePrefix}. Please explain the attached image, ** IMPORTANT** :If the image has question provide a full professional answer.";
         }
 
         public static class LLM
@@ -50,6 +50,13 @@ namespace AI_Assistant
             Arabic,
             English,
             German
+        }
+
+        public enum Providers
+        {
+            OpenAI,
+            Gemini,
+            DeepSeek
         }
     }
 }

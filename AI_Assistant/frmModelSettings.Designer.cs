@@ -184,8 +184,7 @@
             MinimizeBox = false;
             Name = "frmModelSettings";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Model Settings";
-            FormClosing += frmModelSettings_FormClosing;
+            Text = "Model Settings";            
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ResumeLayout(false);

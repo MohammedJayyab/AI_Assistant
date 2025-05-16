@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <Reference Include="LLMKit">
-      <HintPath>..\..\..\LLMOrchestratorApp\LLMKitLib\bin\Debug\net8.0\LLMKit.dll</HintPath>
+      <HintPath>..\..\LLMOrchestratorApp\LLMKitLib\bin\Debug\net8.0\LLMKit.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -45,7 +45,7 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 		<None Update="appsettings.Local.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 		<None Update="images\bot.png">
 		  <Pack>True</Pack>

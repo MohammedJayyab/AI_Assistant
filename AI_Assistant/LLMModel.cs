@@ -10,16 +10,14 @@ namespace AI_Assistant
         public string Model = string.Empty;
         public int MaxTokens = Constants.LLM.MaxTokens;
         public double Temperature = Constants.LLM.Temperature;
-
         public int MaxMessages = Constants.LLM.MaxMaxMessages;
-
         public string ProviderWithModel = string.Empty;
         public string SystemMessage = string.Empty;
     }
 
     public class LLMModelFactory
     {
-        private LLMModel _lLMModel;
+        private readonly LLMModel _lLMModel;
 
         public LLMModelFactory()
         {
@@ -52,16 +50,16 @@ namespace AI_Assistant
                 _lLMModel.Temperature = double.TryParse(appSettings.DefaultTemparature, out var temperature) ? temperature : Constants.LLM.Temperature;
                 _lLMModel.MaxMessages = int.TryParse(appSettings.MaxMessages, out var maxMessages) ? maxMessages : Constants.LLM.MaxMessages;
 
-                if (providerName == Providers.Gemini.ToString())
+                if (providerName == Constants.Providers.Gemini.ToString())
                     _lLMModel.Client = new LLMClient(new GeminiProvider(_lLMModel.ApiKey, _lLMModel.Model), _lLMModel.MaxTokens, _lLMModel.Temperature, _lLMModel.MaxMessages);
-                else if (providerName == Providers.OpenAI.ToString())
+                else if (providerName == Constants.Providers.OpenAI.ToString())
                     _lLMModel.Client = new LLMClient(new OpenAIProvider(_lLMModel.ApiKey, _lLMModel.Model), _lLMModel.MaxTokens, _lLMModel.Temperature, _lLMModel.MaxMessages);
-                else if (providerName == Providers.DeepSeek.ToString())
+                else if (providerName == Constants.Providers.DeepSeek.ToString())
                     _lLMModel.Client = new LLMClient(new DeepSeekProvider(_lLMModel.ApiKey, _lLMModel.Model), _lLMModel.MaxTokens, _lLMModel.Temperature, _lLMModel.MaxMessages);
 
                 _lLMModel.Client.SetSystemMessage(Constants.SystemMessages.Default);
 
-                _lLMModel.ProviderWithModel = $"{providerName} - {_lLMModel.Model} - Max Token: '{_lLMModel.MaxTokens}' - Temp: '{_lLMModel.Temperature}' - Max Messages: '{_lLMModel.MaxMessages}'";
+                _lLMModel.ProviderWithModel = $"{providerName} - {_lLMModel.Model} - Max Token: '{_lLMModel.MaxTokens}' - Temp.: '{_lLMModel.Temperature}' - Max Messages: '{_lLMModel.MaxMessages}'";
 
                 return _lLMModel;
             }
