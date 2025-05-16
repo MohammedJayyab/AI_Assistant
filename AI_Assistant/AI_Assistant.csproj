@@ -15,14 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="LLMKit" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.5" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3240.44" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="LLMKit">
-      <HintPath>..\..\LLMOrchestratorApp\LLMKitLib\bin\Debug\net8.0\LLMKit.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>

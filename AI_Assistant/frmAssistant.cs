@@ -14,11 +14,10 @@ namespace AI_Assistant
             InitializeComponent();
             InitModel();
 
-            InitializeWebView();
             EnableButtons();
         }
 
-        private async void InitializeWebView()
+        private async Task InitializeWebView()
         {
             _webView = new WebView2();
             pnlBody.Controls.Add(_webView);
@@ -27,13 +26,15 @@ namespace AI_Assistant
             await _webView.EnsureCoreWebView2Async();
         }
 
-        private void frmAssistant_Load(object sender, EventArgs e)
+        private async void frmAssistant_Load(object sender, EventArgs e)
         {
             this.BeginInvoke(new Action(() =>
             {
                 txtPrompt.Focus();
                 txtPrompt.SelectAll();
             }));
+            await InitializeWebView();
+            btnNew_Click(sender, e);
         }
 
         public async void PreviewHtml(string htmlContent)
@@ -70,7 +71,7 @@ namespace AI_Assistant
                 {
                     if (string.IsNullOrEmpty(txtImageUrl.Text.Trim()))
                     {
-                        MessageBox.Show("Please enter a valid image URL.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Please attache a valid image.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                     response = await _llmModel.Client.GenerateTextWithImageAsync(prompt, txtImageUrl.Text);
@@ -94,6 +95,7 @@ namespace AI_Assistant
                 txtPrompt.Enabled = true;
                 txtPrompt.Clear();
                 txtPrompt.Focus();
+                txtImageUrl.Text = string.Empty; // Clear the image URL after processing
             }
         }
 
@@ -103,12 +105,15 @@ namespace AI_Assistant
             _accumulatedHtml = string.Empty; // Reset the accumulated HTML content
             _llmModel.Client.ClearConversation();
             _llmModel.Client.SetSystemMessage(Constants.SystemMessages.Default);
-            _webView.CoreWebView2.NavigateToString("<html><body></body></html>");
+            //_webView.CoreWebView2.NavigateToString("<html><body></body></html>");
+            _webView.CoreWebView2.NavigateToString(Htmltemplate.EmptyHtmlWithTitle);
 
             txtPrompt.Clear();
             txtPrompt.Focus();
             txtPrompt.Enabled = true;
             txtPrompt.SelectAll();
+
+            txtImageUrl.Text = string.Empty;
         }
 
         private void AddToResponse(string text)
@@ -142,18 +147,40 @@ namespace AI_Assistant
                 // Allow multi-line input
                 txtPrompt.AppendText(Environment.NewLine);
             }
+            else if (e.Control && e.KeyCode == Keys.V)
+            {
+                if (Clipboard.ContainsText())
+                {
+                    txtPrompt.AppendText(Clipboard.GetText());
+                }
+                else if (Clipboard.ContainsImage())
+                {
+                    // Handle image paste if needed
+                    string imagePath = ImageHelper.SaveClipboardImageAsJpg();
+                    txtImageUrl.Text = imagePath;
+                    txtPrompt.AppendText("Image Attached...\r\n");
+                    //e.SuppressKeyPress = true;
+                }
+            }
             else if (e.KeyCode == Keys.Enter)
             {
                 // Prevent the default behavior of the Enter key
                 e.SuppressKeyPress = true;
-                await GetResponseAsync(txtPrompt.Text.Trim());
+                //await GetResponseAsync(txtPrompt.Text.Trim());
+                btnSend_Click(sender, e); // Call the send button click event handler
             }
         }
 
         private async void btnSend_Click(object sender, EventArgs e)
         {
             _llmModel.Client.SetSystemMessage(Constants.SystemMessages.Default);
-            await GetResponseAsync(txtPrompt.Text.Trim());
+            bool isImageAttached = !string.IsNullOrWhiteSpace(txtImageUrl.Text.Trim());
+            if (!string.IsNullOrWhiteSpace(txtImageUrl.Text))
+            {
+                _llmModel.Client.SetSystemMessage(Constants.SystemMessages.Image);
+            }
+
+            await GetResponseAsync(txtPrompt.Text.Trim(), isImageAttached);
         }
 
         private async void btnSummarize_Click(object sender, EventArgs e)
@@ -196,29 +223,6 @@ namespace AI_Assistant
             _llmModel.Client.SetSystemMessage(Constants.SystemMessages.Prompt);
             txtPrompt.Text = "Write a prompt for the following text: \n\n" + txtPrompt.Text;
             await GetResponseAsync(txtPrompt.Text.Trim());
-        }
-
-        private async void btnImage_Click(object sender, EventArgs e)
-        {
-            _llmModel.Client.SetSystemMessage(Constants.SystemMessages.Image);
-            txtPrompt.Text = "Please explain the attached image.";
-            await GetResponseAsync(txtPrompt.Text.Trim(), true);
-        }
-
-        private async void btnCaptureAndAskImage_Click(object sender, EventArgs e)
-        {
-            string imagePath = ImageHelper.SaveClipboardImageAsJpg();
-            if (string.IsNullOrEmpty(imagePath))
-            {
-                MessageBox.Show("No image found in the clipboard.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            txtImageUrl.Text = imagePath;
-
-            _llmModel.Client.SetSystemMessage(Constants.SystemMessages.Image);
-            txtPrompt.Text = "Please explain the attached image.";
-
-            await GetResponseAsync(txtPrompt.Text.Trim(), true);
         }
 
         private void radioAr_CheckedChanged(object sender, EventArgs e)
@@ -276,6 +280,49 @@ namespace AI_Assistant
         private void txtPrompt_TextChanged(object sender, EventArgs e)
         {
             EnableButtons();
+        }
+
+        private void btnAddImage_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtImageUrl.Text))
+            {
+                using (OpenFileDialog openFileDialog = new OpenFileDialog())
+                {
+                    // Updated filter to include common image types and handle both lowercase and uppercase extensions.
+                    openFileDialog.Filter = "Image Files (*.jpg; *.jpeg; *.png; *.bmp; *.gif; *.tiff)|*.jpg;*.jpeg;*.png;*.bmp;*.gif;*.tiff;*.JPG;*.JPEG;*.PNG;*.BMP;*.GIF;*.TIFF|All files (*.*)|*.*";
+                    openFileDialog.Title = "Select an Image File";
+
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        txtImageUrl.Text = openFileDialog.FileName;
+                        txtPrompt.Text = $"Image Attached...\r\n";
+                        txtPrompt.Focus();
+                        txtPrompt.Select(txtPrompt.Text.Length, 0); // Move cursor to the end of the text
+                    }
+                }
+            }
+            else
+            {
+                // remove the image
+                txtImageUrl.Text = string.Empty;
+                txtPrompt.Text = txtPrompt.Text.Replace("Image Attached...\r\n", "");
+                txtPrompt.Focus();
+                txtPrompt.Select(txtPrompt.Text.Length, 0);
+            }
+        }
+
+        private void txtImageUrl_TextChanged(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(txtImageUrl.Text))
+            {
+                btnAddImage.ImageIndex = 1; // delete image icon shown now
+                btnAddImage.Text = "Remove Image"; // Update button text
+            }
+            else
+            {
+                btnAddImage.ImageIndex = 0; // add image icon shown now
+                btnAddImage.Text = "Add Image"; // Reset button text
+            }
         }
     }
 }

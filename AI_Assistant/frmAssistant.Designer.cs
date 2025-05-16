@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAssistant));
             btnSend = new Button();
             label1 = new Label();
@@ -36,10 +37,6 @@
             btnNew = new Button();
             pnlHeader = new Panel();
             btnSettings = new Button();
-            lnkBrowsImg = new LinkLabel();
-            btnCaptureAndAskImage = new Button();
-            txtImageUrl = new TextBox();
-            btnImage = new Button();
             btnPrompt = new Button();
             radioDe = new RadioButton();
             radioEn = new RadioButton();
@@ -49,20 +46,25 @@
             btnExplain = new Button();
             btnTranslate = new Button();
             btnSummarize = new Button();
+            txtImageUrl = new TextBox();
             pnlBody = new Panel();
             pnlFooter = new Panel();
+            panel1 = new Panel();
+            label2 = new Label();
+            btnAddImage = new Button();
+            imageList1 = new ImageList(components);
             pnlHeader.SuspendLayout();
             pnlBody.SuspendLayout();
             pnlFooter.SuspendLayout();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // btnSend
             // 
-            btnSend.Dock = DockStyle.Right;
             btnSend.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnSend.Location = new Point(1969, 3);
+            btnSend.Location = new Point(3, 3);
             btnSend.Name = "btnSend";
-            btnSend.Size = new Size(120, 218);
+            btnSend.Size = new Size(170, 60);
             btnSend.TabIndex = 0;
             btnSend.Text = "Send >";
             btnSend.UseVisualStyleBackColor = true;
@@ -83,10 +85,10 @@
             // 
             lblLLM.AutoSize = true;
             lblLLM.Dock = DockStyle.Top;
-            lblLLM.Font = new Font("Segoe UI", 14F);
-            lblLLM.Location = new Point(3, 3);
+            lblLLM.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblLLM.Location = new Point(5, 5);
             lblLLM.Name = "lblLLM";
-            lblLLM.Size = new Size(102, 38);
+            lblLLM.Size = new Size(67, 25);
             lblLLM.TabIndex = 1;
             lblLLM.Text = "Model:";
             // 
@@ -94,12 +96,12 @@
             // 
             txtPrompt.BackColor = SystemColors.Info;
             txtPrompt.Dock = DockStyle.Fill;
-            txtPrompt.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            txtPrompt.Font = new Font("Segoe UI", 11F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtPrompt.Location = new Point(70, 3);
             txtPrompt.Multiline = true;
             txtPrompt.Name = "txtPrompt";
             txtPrompt.ScrollBars = ScrollBars.Vertical;
-            txtPrompt.Size = new Size(1899, 218);
+            txtPrompt.Size = new Size(1134, 218);
             txtPrompt.TabIndex = 3;
             txtPrompt.TextChanged += txtPrompt_TextChanged;
             txtPrompt.KeyDown += txtPrompt_KeyDown;
@@ -119,10 +121,6 @@
             pnlHeader.AutoScroll = true;
             pnlHeader.BackColor = Color.FromArgb(224, 224, 224);
             pnlHeader.Controls.Add(btnSettings);
-            pnlHeader.Controls.Add(lnkBrowsImg);
-            pnlHeader.Controls.Add(btnCaptureAndAskImage);
-            pnlHeader.Controls.Add(txtImageUrl);
-            pnlHeader.Controls.Add(btnImage);
             pnlHeader.Controls.Add(btnPrompt);
             pnlHeader.Controls.Add(radioDe);
             pnlHeader.Controls.Add(radioEn);
@@ -136,68 +134,27 @@
             pnlHeader.Dock = DockStyle.Top;
             pnlHeader.Location = new Point(3, 3);
             pnlHeader.Name = "pnlHeader";
-            pnlHeader.Size = new Size(2092, 162);
+            pnlHeader.Size = new Size(1380, 162);
             pnlHeader.TabIndex = 6;
             // 
             // btnSettings
             // 
+            btnSettings.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnSettings.Image = Properties.Resources.settings;
             btnSettings.ImageAlign = ContentAlignment.MiddleLeft;
-            btnSettings.Location = new Point(1802, 17);
+            btnSettings.Location = new Point(1219, 16);
             btnSettings.Name = "btnSettings";
-            btnSettings.Size = new Size(185, 52);
+            btnSettings.Size = new Size(144, 52);
             btnSettings.TabIndex = 21;
             btnSettings.Text = "Settings";
             btnSettings.UseVisualStyleBackColor = true;
             btnSettings.Click += btnSettings_Click;
             // 
-            // lnkBrowsImg
-            // 
-            lnkBrowsImg.AutoSize = true;
-            lnkBrowsImg.Location = new Point(1502, 89);
-            lnkBrowsImg.Name = "lnkBrowsImg";
-            lnkBrowsImg.Size = new Size(69, 25);
-            lnkBrowsImg.TabIndex = 20;
-            lnkBrowsImg.TabStop = true;
-            lnkBrowsImg.Text = "Browse";
-            lnkBrowsImg.LinkClicked += lnkBrowsImg_LinkClicked;
-            // 
-            // btnCaptureAndAskImage
-            // 
-            btnCaptureAndAskImage.BackColor = Color.FromArgb(192, 255, 255);
-            btnCaptureAndAskImage.Location = new Point(1802, 72);
-            btnCaptureAndAskImage.Name = "btnCaptureAndAskImage";
-            btnCaptureAndAskImage.Size = new Size(185, 51);
-            btnCaptureAndAskImage.TabIndex = 19;
-            btnCaptureAndAskImage.Text = "Paste Image";
-            btnCaptureAndAskImage.UseVisualStyleBackColor = false;
-            btnCaptureAndAskImage.Click += btnCaptureAndAskImage_Click;
-            // 
-            // txtImageUrl
-            // 
-            txtImageUrl.Location = new Point(797, 84);
-            txtImageUrl.Name = "txtImageUrl";
-            txtImageUrl.Size = new Size(696, 31);
-            txtImageUrl.TabIndex = 18;
-            txtImageUrl.Text = "C:\\";
-            // 
-            // btnImage
-            // 
-            btnImage.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnImage.ForeColor = Color.ForestGreen;
-            btnImage.Location = new Point(1596, 74);
-            btnImage.Name = "btnImage";
-            btnImage.Size = new Size(185, 46);
-            btnImage.TabIndex = 17;
-            btnImage.Text = "Explain Img";
-            btnImage.UseVisualStyleBackColor = true;
-            btnImage.Click += btnImage_Click;
-            // 
             // btnPrompt
             // 
-            btnPrompt.Location = new Point(1596, 16);
+            btnPrompt.Location = new Point(1049, 16);
             btnPrompt.Name = "btnPrompt";
-            btnPrompt.Size = new Size(185, 52);
+            btnPrompt.Size = new Size(156, 52);
             btnPrompt.TabIndex = 16;
             btnPrompt.Text = "LLM Prompt </>";
             btnPrompt.UseVisualStyleBackColor = true;
@@ -206,7 +163,7 @@
             // radioDe
             // 
             radioDe.AutoSize = true;
-            radioDe.Location = new Point(690, 74);
+            radioDe.Location = new Point(504, 74);
             radioDe.Name = "radioDe";
             radioDe.Size = new Size(59, 29);
             radioDe.TabIndex = 15;
@@ -218,7 +175,7 @@
             // radioEn
             // 
             radioEn.AutoSize = true;
-            radioEn.Location = new Point(629, 74);
+            radioEn.Location = new Point(443, 74);
             radioEn.Name = "radioEn";
             radioEn.Size = new Size(56, 29);
             radioEn.TabIndex = 14;
@@ -231,7 +188,7 @@
             // 
             radioAr.AutoSize = true;
             radioAr.Checked = true;
-            radioAr.Location = new Point(568, 74);
+            radioAr.Location = new Point(382, 74);
             radioAr.Name = "radioAr";
             radioAr.Size = new Size(55, 29);
             radioAr.TabIndex = 13;
@@ -242,9 +199,9 @@
             // 
             // btnEmailResponse
             // 
-            btnEmailResponse.Location = new Point(1398, 16);
+            btnEmailResponse.Location = new Point(883, 16);
             btnEmailResponse.Name = "btnEmailResponse";
-            btnEmailResponse.Size = new Size(185, 52);
+            btnEmailResponse.Size = new Size(156, 52);
             btnEmailResponse.TabIndex = 11;
             btnEmailResponse.Text = "Response Email";
             btnEmailResponse.UseVisualStyleBackColor = true;
@@ -252,19 +209,19 @@
             // 
             // btnOnlyKeyPoints
             // 
-            btnOnlyKeyPoints.Location = new Point(1002, 16);
+            btnOnlyKeyPoints.Location = new Point(714, 16);
             btnOnlyKeyPoints.Name = "btnOnlyKeyPoints";
-            btnOnlyKeyPoints.Size = new Size(185, 52);
+            btnOnlyKeyPoints.Size = new Size(156, 52);
             btnOnlyKeyPoints.TabIndex = 9;
-            btnOnlyKeyPoints.Text = "KeyPoints/Important";
+            btnOnlyKeyPoints.Text = "KeyPoints";
             btnOnlyKeyPoints.UseVisualStyleBackColor = true;
             btnOnlyKeyPoints.Click += btnOnlyKeyPoints_Click;
             // 
             // btnExplain
             // 
-            btnExplain.Location = new Point(804, 16);
+            btnExplain.Location = new Point(548, 16);
             btnExplain.Name = "btnExplain";
-            btnExplain.Size = new Size(185, 52);
+            btnExplain.Size = new Size(156, 52);
             btnExplain.TabIndex = 8;
             btnExplain.Text = "Explain";
             btnExplain.UseVisualStyleBackColor = true;
@@ -272,9 +229,9 @@
             // 
             // btnTranslate
             // 
-            btnTranslate.Location = new Point(606, 16);
+            btnTranslate.Location = new Point(382, 16);
             btnTranslate.Name = "btnTranslate";
-            btnTranslate.Size = new Size(185, 52);
+            btnTranslate.Size = new Size(156, 52);
             btnTranslate.TabIndex = 7;
             btnTranslate.Text = "Translate";
             btnTranslate.UseVisualStyleBackColor = true;
@@ -282,13 +239,22 @@
             // 
             // btnSummarize
             // 
-            btnSummarize.Location = new Point(408, 16);
+            btnSummarize.Location = new Point(216, 16);
             btnSummarize.Name = "btnSummarize";
-            btnSummarize.Size = new Size(185, 52);
+            btnSummarize.Size = new Size(156, 52);
             btnSummarize.TabIndex = 6;
             btnSummarize.Text = "Summarize";
             btnSummarize.UseVisualStyleBackColor = true;
             btnSummarize.Click += btnSummarize_Click;
+            // 
+            // txtImageUrl
+            // 
+            txtImageUrl.Location = new Point(6, 133);
+            txtImageUrl.Name = "txtImageUrl";
+            txtImageUrl.Size = new Size(141, 31);
+            txtImageUrl.TabIndex = 18;
+            txtImageUrl.Visible = false;
+            txtImageUrl.TextChanged += txtImageUrl_TextChanged;
             // 
             // pnlBody
             // 
@@ -298,28 +264,71 @@
             pnlBody.Dock = DockStyle.Fill;
             pnlBody.Location = new Point(3, 165);
             pnlBody.Name = "pnlBody";
-            pnlBody.Padding = new Padding(3);
-            pnlBody.Size = new Size(2092, 753);
+            pnlBody.Padding = new Padding(5);
+            pnlBody.Size = new Size(1380, 753);
             pnlBody.TabIndex = 7;
             // 
             // pnlFooter
             // 
             pnlFooter.AutoScroll = true;
             pnlFooter.Controls.Add(txtPrompt);
-            pnlFooter.Controls.Add(btnSend);
+            pnlFooter.Controls.Add(panel1);
             pnlFooter.Controls.Add(label1);
             pnlFooter.Dock = DockStyle.Bottom;
             pnlFooter.Location = new Point(3, 918);
             pnlFooter.Name = "pnlFooter";
             pnlFooter.Padding = new Padding(3);
-            pnlFooter.Size = new Size(2092, 224);
+            pnlFooter.Size = new Size(1380, 224);
             pnlFooter.TabIndex = 8;
+            // 
+            // panel1
+            // 
+            panel1.Controls.Add(label2);
+            panel1.Controls.Add(btnAddImage);
+            panel1.Controls.Add(btnSend);
+            panel1.Controls.Add(txtImageUrl);
+            panel1.Dock = DockStyle.Right;
+            panel1.Location = new Point(1204, 3);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(173, 218);
+            panel1.TabIndex = 4;
+            // 
+            // label2
+            // 
+            label2.ForeColor = Color.Gray;
+            label2.Location = new Point(15, 64);
+            label2.Name = "label2";
+            label2.Size = new Size(144, 60);
+            label2.TabIndex = 19;
+            label2.Text = "(Shift + Enter for New Line)";
+            // 
+            // btnAddImage
+            // 
+            btnAddImage.ImageAlign = ContentAlignment.MiddleLeft;
+            btnAddImage.ImageIndex = 0;
+            btnAddImage.ImageList = imageList1;
+            btnAddImage.Location = new Point(6, 166);
+            btnAddImage.Name = "btnAddImage";
+            btnAddImage.Size = new Size(157, 38);
+            btnAddImage.TabIndex = 1;
+            btnAddImage.Text = " Add Image";
+            btnAddImage.TextAlign = ContentAlignment.MiddleRight;
+            btnAddImage.UseVisualStyleBackColor = true;
+            btnAddImage.Click += btnAddImage_Click;
+            // 
+            // imageList1
+            // 
+            imageList1.ColorDepth = ColorDepth.Depth32Bit;
+            imageList1.ImageStream = (ImageListStreamer)resources.GetObject("imageList1.ImageStream");
+            imageList1.TransparentColor = Color.Transparent;
+            imageList1.Images.SetKeyName(0, "add_image.png");
+            imageList1.Images.SetKeyName(1, "del_image.png");
             // 
             // frmAssistant
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(2098, 1145);
+            ClientSize = new Size(1386, 1145);
             Controls.Add(pnlBody);
             Controls.Add(pnlFooter);
             Controls.Add(pnlHeader);
@@ -335,6 +344,8 @@
             pnlBody.PerformLayout();
             pnlFooter.ResumeLayout(false);
             pnlFooter.PerformLayout();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -357,10 +368,11 @@
         private RadioButton radioEn;
         private RadioButton radioAr;
         private Button btnPrompt;
-        private Button btnImage;
         private TextBox txtImageUrl;
-        private Button btnCaptureAndAskImage;
-        private LinkLabel lnkBrowsImg;
         private Button btnSettings;
+        private Panel panel1;
+        private Button btnAddImage;
+        private ImageList imageList1;
+        private Label label2;
     }
 }

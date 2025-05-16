@@ -64,21 +64,24 @@
             // 
             // txtMaxMessages
             // 
-            txtMaxMessages.Location = new Point(173, 185);
+            txtMaxMessages.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            txtMaxMessages.Location = new Point(236, 185);
             txtMaxMessages.Name = "txtMaxMessages";
             txtMaxMessages.Size = new Size(230, 31);
             txtMaxMessages.TabIndex = 6;
             // 
             // txtDefaultTemperature
             // 
-            txtDefaultTemperature.Location = new Point(173, 138);
+            txtDefaultTemperature.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            txtDefaultTemperature.Location = new Point(236, 138);
             txtDefaultTemperature.Name = "txtDefaultTemperature";
             txtDefaultTemperature.Size = new Size(230, 31);
             txtDefaultTemperature.TabIndex = 5;
             // 
             // txtDefaultMaxTokens
             // 
-            txtDefaultMaxTokens.Location = new Point(173, 91);
+            txtDefaultMaxTokens.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            txtDefaultMaxTokens.Location = new Point(236, 91);
             txtDefaultMaxTokens.Name = "txtDefaultMaxTokens";
             txtDefaultMaxTokens.Size = new Size(230, 31);
             txtDefaultMaxTokens.TabIndex = 4;
@@ -86,7 +89,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(31, 188);
+            label4.Location = new Point(81, 188);
             label4.Name = "label4";
             label4.Size = new Size(132, 25);
             label4.TabIndex = 3;
@@ -95,16 +98,16 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(49, 140);
+            label3.Location = new Point(42, 140);
             label3.Name = "label3";
-            label3.Size = new Size(114, 25);
+            label3.Size = new Size(171, 25);
             label3.TabIndex = 3;
             label3.Text = "DefaultTemperature:";
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(63, 94);
+            label2.Location = new Point(113, 94);
             label2.Name = "label2";
             label2.Size = new Size(100, 25);
             label2.TabIndex = 2;
@@ -112,10 +115,11 @@
             // 
             // cmbDefaultLLM
             // 
+            cmbDefaultLLM.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             cmbDefaultLLM.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbDefaultLLM.FlatStyle = FlatStyle.System;
             cmbDefaultLLM.FormattingEnabled = true;
-            cmbDefaultLLM.Location = new Point(173, 42);
+            cmbDefaultLLM.Location = new Point(236, 42);
             cmbDefaultLLM.Name = "cmbDefaultLLM";
             cmbDefaultLLM.Size = new Size(233, 33);
             cmbDefaultLLM.TabIndex = 1;
@@ -123,7 +127,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(19, 44);
+            label1.Location = new Point(69, 44);
             label1.Name = "label1";
             label1.Size = new Size(144, 25);
             label1.TabIndex = 0;
@@ -184,7 +188,7 @@
             MinimizeBox = false;
             Name = "frmModelSettings";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Model Settings";            
+            Text = "Model Settings";
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ResumeLayout(false);
