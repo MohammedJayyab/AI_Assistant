@@ -6,6 +6,7 @@
 appsettings.Local.json
 appsettings.local.json
 appsettings.json
+.cursorignore
 
 
 # Build results
