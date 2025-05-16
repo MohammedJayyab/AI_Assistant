@@ -55,9 +55,9 @@
             groupBox1.Controls.Add(label2);
             groupBox1.Controls.Add(cmbDefaultLLM);
             groupBox1.Controls.Add(label1);
-            groupBox1.Location = new Point(12, 22);
+            groupBox1.Location = new Point(23, 30);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(625, 293);
+            groupBox1.Size = new Size(625, 259);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "LLM Setting ::Json";
@@ -131,9 +131,9 @@
             // 
             // btnSave
             // 
-            btnSave.Location = new Point(496, 349);
+            btnSave.Location = new Point(485, 304);
             btnSave.Name = "btnSave";
-            btnSave.Size = new Size(141, 45);
+            btnSave.Size = new Size(153, 42);
             btnSave.TabIndex = 1;
             btnSave.Text = "Save";
             btnSave.UseVisualStyleBackColor = true;
@@ -141,18 +141,18 @@
             // 
             // btnCancel
             // 
-            btnCancel.Location = new Point(349, 349);
+            btnCancel.Location = new Point(485, 352);
             btnCancel.Name = "btnCancel";
-            btnCancel.Size = new Size(141, 45);
+            btnCancel.Size = new Size(153, 42);
             btnCancel.TabIndex = 2;
             btnCancel.Text = "Cancel";
             btnCancel.UseVisualStyleBackColor = true;
             // 
             // btnOpenJson
             // 
-            btnOpenJson.Location = new Point(19, 349);
+            btnOpenJson.Location = new Point(182, 304);
             btnOpenJson.Name = "btnOpenJson";
-            btnOpenJson.Size = new Size(168, 45);
+            btnOpenJson.Size = new Size(153, 42);
             btnOpenJson.TabIndex = 3;
             btnOpenJson.Text = "Edit Json File";
             btnOpenJson.UseVisualStyleBackColor = true;
@@ -160,7 +160,7 @@
             // 
             // btnLoad
             // 
-            btnLoad.Location = new Point(189, 352);
+            btnLoad.Location = new Point(23, 304);
             btnLoad.Name = "btnLoad";
             btnLoad.Size = new Size(153, 42);
             btnLoad.TabIndex = 4;
@@ -173,7 +173,7 @@
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = btnCancel;
-            ClientSize = new Size(649, 431);
+            ClientSize = new Size(669, 432);
             Controls.Add(btnLoad);
             Controls.Add(btnOpenJson);
             Controls.Add(btnCancel);

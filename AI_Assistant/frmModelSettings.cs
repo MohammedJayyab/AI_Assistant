@@ -102,10 +102,6 @@ namespace AI_Assistant
             var newJson = JsonSerializer.Serialize(rootDict, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(filePath, newJson);
 
-            MessageBox.Show("Settings updated successfully.", "Save", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-            // Reload settings
-            AppSettings.LoadSettings();
             Close();
         }
 
