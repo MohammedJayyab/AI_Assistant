@@ -28,13 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAssistant));
             btnSend = new Button();
             label1 = new Label();
-            label2 = new Label();
+            lblLLM = new Label();
             txtPrompt = new TextBox();
             btnNew = new Button();
             btnUpdateSize = new Button();
             pnlHeader = new Panel();
+            btnSettings = new Button();
             lnkBrowsImg = new LinkLabel();
             btnCaptureAndAskImage = new Button();
             txtImageUrl = new TextBox();
@@ -80,16 +82,16 @@
             label1.TabIndex = 1;
             label1.Text = "Ask:";
             // 
-            // label2
+            // lblLLM
             // 
-            label2.AutoSize = true;
-            label2.Dock = DockStyle.Top;
-            label2.Font = new Font("Segoe UI", 14F);
-            label2.Location = new Point(3, 3);
-            label2.Name = "label2";
-            label2.Size = new Size(200, 38);
-            label2.TabIndex = 1;
-            label2.Text = "LLM Response:";
+            lblLLM.AutoSize = true;
+            lblLLM.Dock = DockStyle.Top;
+            lblLLM.Font = new Font("Segoe UI", 14F);
+            lblLLM.Location = new Point(3, 3);
+            lblLLM.Name = "lblLLM";
+            lblLLM.Size = new Size(102, 38);
+            lblLLM.TabIndex = 1;
+            lblLLM.Text = "Model:";
             // 
             // txtPrompt
             // 
@@ -129,6 +131,7 @@
             // 
             pnlHeader.AutoScroll = true;
             pnlHeader.BackColor = Color.FromArgb(224, 224, 224);
+            pnlHeader.Controls.Add(btnSettings);
             pnlHeader.Controls.Add(lnkBrowsImg);
             pnlHeader.Controls.Add(btnCaptureAndAskImage);
             pnlHeader.Controls.Add(txtImageUrl);
@@ -151,6 +154,18 @@
             pnlHeader.Name = "pnlHeader";
             pnlHeader.Size = new Size(2033, 162);
             pnlHeader.TabIndex = 6;
+            // 
+            // btnSettings
+            // 
+            btnSettings.Image = Properties.Resources.settings;
+            btnSettings.ImageAlign = ContentAlignment.MiddleLeft;
+            btnSettings.Location = new Point(1802, 17);
+            btnSettings.Name = "btnSettings";
+            btnSettings.Size = new Size(185, 52);
+            btnSettings.TabIndex = 21;
+            btnSettings.Text = "Settings";
+            btnSettings.UseVisualStyleBackColor = true;
+            btnSettings.Click += btnSettings_Click;
             // 
             // lnkBrowsImg
             // 
@@ -315,7 +330,7 @@
             // 
             pnlBody.AutoScroll = true;
             pnlBody.BackColor = Color.LightGray;
-            pnlBody.Controls.Add(label2);
+            pnlBody.Controls.Add(lblLLM);
             pnlBody.Dock = DockStyle.Fill;
             pnlBody.Location = new Point(3, 165);
             pnlBody.Name = "pnlBody";
@@ -344,6 +359,7 @@
             Controls.Add(pnlBody);
             Controls.Add(pnlFooter);
             Controls.Add(pnlHeader);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "frmAssistant";
             Padding = new Padding(3);
             StartPosition = FormStartPosition.CenterScreen;
@@ -362,7 +378,7 @@
 
         private Button btnSend;
         private Label label1;
-        private Label label2;
+        private Label lblLLM;
         private TextBox txtPrompt;
         private Button btnNew;
         private Button btnUpdateSize;
@@ -384,5 +400,6 @@
         private TextBox txtImageUrl;
         private Button btnCaptureAndAskImage;
         private LinkLabel lnkBrowsImg;
+        private Button btnSettings;
     }
 }

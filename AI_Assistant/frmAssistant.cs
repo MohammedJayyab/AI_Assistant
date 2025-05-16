@@ -1,6 +1,3 @@
-using LLMKit;
-using LLMKit.Providers;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Web.WebView2.WinForms;
 
 namespace AI_Assistant
@@ -8,24 +5,15 @@ namespace AI_Assistant
     public partial class frmAssistant : Form
     {
         private WebView2 webView;
-        private string accumulatedHtml = string.Empty; // To store the accumulated HTML content
+        private string accumulatedHtml = string.Empty;
 
-        public static string GetTempImagesFolderPath()
-        {
-            // Get the base directory of the application (usually the bin folder or a subfolder within it)
-            string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        //private static string _apiKey = string.Empty, _model = string.Empty;
+        private static string _systemMessage = Constants.SystemMessages.Default;
 
-            // Combine the base directory with the "Temp_Images" folder name
-            string tempImagesPath = Path.Combine(baseDirectory, "Temp_Images");
+        private string _defaultLanguage = Constants.Language.Arabic.ToString();
 
-            return tempImagesPath;
-        }
-
-        private static string _apiKey, _model;
-        private static string _systemMessage = SystemMessagesConstants.DefaultSystemMessage;
-        private string _defaultLanguage = "Arabic";
-
-        private LLMClient _client;
+        //private LLMClient _client;
+        private LLMModel _llmModel;
 
         public frmAssistant()
         {
@@ -56,25 +44,10 @@ namespace AI_Assistant
 
         private void InitModel()
         {
-            var configuration = new ConfigurationBuilder()
-                    .SetBasePath(AppContext.BaseDirectory)
-                    .AddJsonFile("appsettings.Local.json")
-                    .Build();
+            LLMModelFactory lLMModelFactory = new LLMModelFactory();
+            _llmModel = lLMModelFactory.InitModel();
 
-            _apiKey = configuration["Gemini:ApiKey"];
-            _model = configuration["Gemini:Model"];
-
-            if (string.IsNullOrEmpty(_apiKey))
-            {
-                throw new Exception("API key is missing in appsettings.json.");
-            }
-            if (string.IsNullOrEmpty(_model))
-            {
-                throw new Exception("Model is missing in appsettings.json");
-            }
-
-            _client = new LLMClient(new GeminiProvider(_apiKey, _model), 6144, 0.3, 25);
-            _client.SetSystemMessage(_systemMessage);
+            lblLLM.Text = $"LLM: {_llmModel.ProviderWithModel}";
         }
 
         private async void btnSend_Click(object sender, EventArgs e)
@@ -102,11 +75,11 @@ namespace AI_Assistant
                         MessageBox.Show("Please enter a valid image URL.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-                    response = await _client.GenerateTextWithImageAsync(prompt, txtImageUrl.Text);
+                    response = await _llmModel.Client.GenerateTextWithImageAsync(prompt, txtImageUrl.Text);
                 }
                 else
                 {
-                    response = await _client.GenerateTextAsync(prompt);
+                    response = await _llmModel.Client.GenerateTextAsync(prompt);
                 }
 
                 AddToResponse($"Assistant >>  {response.Trim()}");
@@ -128,9 +101,9 @@ namespace AI_Assistant
 
         private void btnNew_Click(object sender, EventArgs e)
         {
-            _systemMessage = SystemMessagesConstants.DefaultSystemMessage;
+            _systemMessage = Constants.SystemMessages.Default;
             accumulatedHtml = string.Empty; // Reset the accumulated HTML content
-            _client.ClearConversation();
+            _llmModel.Client.ClearConversation();
             webView.CoreWebView2.NavigateToString("<html><body></body></html>");
 
             txtPrompt.Clear();
@@ -138,23 +111,6 @@ namespace AI_Assistant
             txtPrompt.Enabled = true;
             txtPrompt.SelectAll();
         }
-
-        /*
-         * private void AddToResponse(string text)
-         {
-             if (txtResponse.InvokeRequired)
-             {
-                 txtResponse.Invoke(new Action(() => txtResponse.AppendText(text)));
-             }
-             else
-             {
-                 txtResponse.AppendText(text);
-                 txtResponse.AppendText(Environment.NewLine);
-
-                 txtResponse.ScrollToCaret();
-             }
-         }
-          */
 
         private void AddToResponse(string text)
         {
@@ -166,7 +122,7 @@ namespace AI_Assistant
                 string userText = cleanedText.Trim();
                 if (userText.Length > 550)
                 {
-                    userText = userText.Substring(0, 500) + "........";
+                    userText = userText.Substring(0, 500) + "\r\n........";
                 }
                 formattedText = $"<div style=\"text-align: right; background-color: #f0f0f0; padding: 8px; border-radius: 4px; margin-bottom: 6px;\">{userText}</div>";
             }
@@ -182,7 +138,7 @@ namespace AI_Assistant
 
         private void btnUpdateSize_Click(object sender, EventArgs e)
         {
-            int defaultSize = _client.GetMaxMessages();
+            int defaultSize = _llmModel.Client.GetMaxMessages();
             var input = Microsoft.VisualBasic.Interaction.InputBox("Enter the new size (2-100):", "Update Size", defaultSize.ToString());
 
             // User pressed Cancel or left it empty
@@ -197,7 +153,7 @@ namespace AI_Assistant
                     return;
                 }
 
-                _client.UpdateMaxMessages(newSize);
+                _llmModel.Client.UpdateMaxMessages(newSize);
             }
             else
             {
@@ -231,84 +187,84 @@ namespace AI_Assistant
 
         private void btnStandard_Click(object sender, EventArgs e)
         {
-            _systemMessage = SystemMessagesConstants.DefaultSystemMessage;
-            _client.SetSystemMessage(_systemMessage);
+            _systemMessage = Constants.SystemMessages.Default;
+            _llmModel.Client.SetSystemMessage(_systemMessage);
             txtPrompt.Text = "Here is my prompt: \n\n" + txtPrompt.Text;
             btnSend_Click(sender, e);
         }
 
         private void btnSummarize_Click(object sender, EventArgs e)
         {
-            _systemMessage = SystemMessagesConstants.SummarizeSystemMessage;
-            _client.SetSystemMessage(_systemMessage);
+            _systemMessage = Constants.SystemMessages.Summarize;
+            _llmModel.Client.SetSystemMessage(_systemMessage);
             txtPrompt.Text = "Summarize the following text: \n\n" + txtPrompt.Text;
             btnSend_Click(sender, e);
         }
 
         private void btnTranslate_Click(object sender, EventArgs e)
-        {                // todo : add a language selector
-            _systemMessage = SystemMessagesConstants.TranslateSystemMessage;
-            _client.SetSystemMessage(_systemMessage);
+        {
+            _systemMessage = Constants.SystemMessages.Translate;
+            _llmModel.Client.SetSystemMessage(_systemMessage);
             txtPrompt.Text = "Translate the following text to " + _defaultLanguage + ": \n\n" + txtPrompt.Text;
             btnSend_Click(sender, e);
         }
 
         private void btnExplain_Click(object sender, EventArgs e)
         {
-            _systemMessage = SystemMessagesConstants.ExplainSystemMessage;
-            _client.SetSystemMessage(_systemMessage);
+            _systemMessage = Constants.SystemMessages.Explain;
+            _llmModel.Client.SetSystemMessage(_systemMessage);
             txtPrompt.Text = "Explain the following text: \n\n" + txtPrompt.Text;
             btnSend_Click(sender, e);
         }
 
         private void btnOnlyKeyPoints_Click(object sender, EventArgs e)
         {
-            _systemMessage = SystemMessagesConstants.KeyPointsSystemMessage;
-            _client.SetSystemMessage(_systemMessage);
+            _systemMessage = Constants.SystemMessages.KeyPoints;
+            _llmModel.Client.SetSystemMessage(_systemMessage);
             txtPrompt.Text = "Extract the key points from the following text: \n\n" + txtPrompt.Text;
             btnSend_Click(sender, e);
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            _systemMessage = SystemMessagesConstants.SearchSystemMessage;
-            _client.SetSystemMessage(_systemMessage);
+            _systemMessage = Constants.SystemMessages.Search;
+            _llmModel.Client.SetSystemMessage(_systemMessage);
             txtPrompt.Text = "Search the following text: \n\n" + txtPrompt.Text;
             btnSend_Click(sender, e);
         }
 
         private void btnEmailResponse_Click(object sender, EventArgs e)
         {
-            _systemMessage = SystemMessagesConstants.EmailResponseSystemMessage;
-            _client.SetSystemMessage(_systemMessage);
+            _systemMessage = Constants.SystemMessages.EmailResponse;
+            _llmModel.Client.SetSystemMessage(_systemMessage);
             txtPrompt.Text = "Write a professional response for the following email: \n\n" + txtPrompt.Text;
             btnSend_Click(sender, e);
         }
 
         private void btnPrompt_Click(object sender, EventArgs e)
         {
-            _systemMessage = SystemMessagesConstants.PromptSystemMessage;
-            _client.SetSystemMessage(_systemMessage);
+            _systemMessage = Constants.SystemMessages.Prompt;
+            _llmModel.Client.SetSystemMessage(_systemMessage);
             txtPrompt.Text = "Write a prompt for the following text: \n\n" + txtPrompt.Text;
             btnSend_Click(sender, e);
         }
 
         private async void btnImage_Click(object sender, EventArgs e)
         {
-            _systemMessage = SystemMessagesConstants.ImageSystemMessage;
-            _client.SetSystemMessage(_systemMessage);
+            _systemMessage = Constants.SystemMessages.Image;
+            _llmModel.Client.SetSystemMessage(_systemMessage);
             txtPrompt.Text = "Please explain the attached image.";
             await GetResponseAsync(txtPrompt.Text.Trim(), true);
         }
 
         private async void btnCaptureAndAskImage_Click(object sender, EventArgs e)
         {
-            string tempImagesPath = GetTempImagesFolderPath();
+            string tempImagesPath = ImageHelper.GetTempImagesFolderPath();
             string imagePath = ImageHelper.SaveClipboardImageAsJpg(tempImagesPath);
             txtImageUrl.Text = imagePath;
 
-            _systemMessage = SystemMessagesConstants.ImageSystemMessage;
-            _client.SetSystemMessage(_systemMessage);
+            _systemMessage = Constants.SystemMessages.Image;
+            _llmModel.Client.SetSystemMessage(_systemMessage);
             txtPrompt.Text = "Please explain the attached image.";
 
             await GetResponseAsync(txtPrompt.Text.Trim(), true);
@@ -316,17 +272,17 @@ namespace AI_Assistant
 
         private void radioAr_CheckedChanged(object sender, EventArgs e)
         {
-            _defaultLanguage = "Arabic";
+            _defaultLanguage = Constants.Language.Arabic.ToString();
         }
 
         private void radioEn_CheckedChanged(object sender, EventArgs e)
         {
-            _defaultLanguage = "English";
+            _defaultLanguage = Constants.Language.English.ToString();
         }
 
         private void radioDe_CheckedChanged(object sender, EventArgs e)
         {
-            _defaultLanguage = "German";
+            _defaultLanguage = Constants.Language.German.ToString();
         }
 
         private void lnkBrowsImg_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -342,6 +298,14 @@ namespace AI_Assistant
                     txtImageUrl.Text = openFileDialog.FileName;
                 }
             }
+        }
+
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            frmModelSettings frmModelSettings = new frmModelSettings();
+            frmModelSettings.ShowDialog();
+
+            InitModel();
         }
     }
 }

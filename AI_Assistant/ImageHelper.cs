@@ -1,13 +1,33 @@
-﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Windows.Forms; // Requires adding a reference to System.Windows.Forms
+﻿using System.Drawing.Imaging;
 
 namespace AI_Assistant;
 
 public static class ImageHelper
 {
+    public static string GetTempImagesFolderPath()
+    {
+        // Get the base directory of the application (usually the bin folder or a subfolder within it)
+        string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+        // Combine the base directory with the "Temp_Images" folder name
+
+        string tempImagesPath = Path.Combine(baseDirectory, Constants.FileSystem.ImageFolder);
+        // Check if the directory exists, if not, create it
+        if (!Directory.Exists(tempImagesPath))
+        {
+            try
+            {
+                Directory.CreateDirectory(tempImagesPath);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error creating directory {tempImagesPath}: {ex.Message}");
+            }
+        }
+
+        return tempImagesPath;
+    }
+
     /// <summary>
     /// Captures an image from the clipboard, saves it as a JPG file
     /// with a unique ID in the specified directory, and returns the full path.
