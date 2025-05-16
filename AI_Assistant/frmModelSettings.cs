@@ -48,27 +48,27 @@ namespace AI_Assistant
                 temperature < Constants.LLM.MinTemperature ||
                 temperature > Constants.LLM.MaxTemperature)
             {
-                MessageBox.Show($"Temperature must be a number between {Constants.LLM.MinTemperature} and {Constants.LLM.MaxTemperature}.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"DefaultTemperature must be a number between {Constants.LLM.MinTemperature} and {Constants.LLM.MaxTemperature}.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtDefaultTemperature.SelectAll();
                 txtDefaultTemperature.Focus();
                 return;
             }
 
             if (!int.TryParse(txtDefaultMaxTokens.Text, out int maxTokens) ||
-                maxTokens < Constants.LLM.MinMaxTokens ||
-                maxTokens > Constants.LLM.MaxMaxTokens)
+                maxTokens < Constants.LLM.MinTokens ||
+                maxTokens > Constants.LLM.MaxTokens)
             {
-                MessageBox.Show($"Max Tokens must be between {Constants.LLM.MinMaxTokens} and {Constants.LLM.MaxMaxTokens}.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Max Tokens must be between {Constants.LLM.MinTokens} and {Constants.LLM.MaxTokens}.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtDefaultMaxTokens.SelectAll();
                 txtDefaultMaxTokens.Focus();
                 return;
             }
 
             if (!int.TryParse(txtMaxMessages.Text, out int maxMessages) ||
-                maxMessages < Constants.LLM.MinMaxMessages ||
-                maxMessages > Constants.LLM.MaxMaxMessages)
+                maxMessages < Constants.LLM.MinMessages ||
+                maxMessages > Constants.LLM.MaxMessages)
             {
-                MessageBox.Show($"Max Messages must be between {Constants.LLM.MinMaxMessages} and {Constants.LLM.MaxMaxMessages}.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Max Messages must be between {Constants.LLM.MinMessages} and {Constants.LLM.MaxMessages}.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtMaxMessages.SelectAll();
                 txtMaxMessages.Focus();
                 return;
@@ -92,7 +92,7 @@ namespace AI_Assistant
             llmJson["DefaultProvider"] = selectedProvider;
             llmJson["DefaultTemparature"] = temperature.ToString();
             llmJson["DefaultMaxTokens"] = maxTokens.ToString();
-            convoJson["MaxMessages"] = maxMessages.ToString();
+            convoJson["DefaultMaxMessages"] = maxMessages.ToString();
 
             // Reassign updated dictionaries
             rootDict["LLM"] = llmJson;

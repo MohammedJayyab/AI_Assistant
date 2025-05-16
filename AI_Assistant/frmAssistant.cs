@@ -265,8 +265,8 @@ namespace AI_Assistant
             btnOnlyKeyPoints.Enabled = enabled;
             btnEmailResponse.Enabled = enabled;
             btnPrompt.Enabled = enabled;
-            btnImage.Enabled = enabled;
-            btnCaptureAndAskImage.Enabled = enabled;
+            //btnImage.Enabled = enabled;
+            //btnCaptureAndAskImage.Enabled = enabled;
         }
 
         private void txtPrompt_TextChanged(object sender, EventArgs e)

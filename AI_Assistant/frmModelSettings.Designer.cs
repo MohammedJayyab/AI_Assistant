@@ -99,7 +99,7 @@
             label3.Name = "label3";
             label3.Size = new Size(114, 25);
             label3.TabIndex = 3;
-            label3.Text = "Temperature:";
+            label3.Text = "DefaultTemperature:";
             // 
             // label2
             // 

@@ -8,9 +8,9 @@ namespace AI_Assistant
         public LLMClient Client;
         public string ApiKey = string.Empty;
         public string Model = string.Empty;
-        public int MaxTokens = Constants.LLM.MaxTokens;
-        public double Temperature = Constants.LLM.Temperature;
-        public int MaxMessages = Constants.LLM.MaxMaxMessages;
+        public int MaxTokens = Constants.LLM.DefaultMaxTokens;
+        public double Temperature = Constants.LLM.DefaultTemperature;
+        public int MaxMessages = Constants.LLM.MaxMessages;
         public string ProviderWithModel = string.Empty;
         public string SystemMessage = string.Empty;
     }
@@ -46,9 +46,9 @@ namespace AI_Assistant
 
                 _lLMModel.ApiKey = apiKey;
                 _lLMModel.Model = model;
-                _lLMModel.MaxTokens = int.TryParse(appSettings.DefaultMaxTokens, out var maxTokens) ? maxTokens : Constants.LLM.MaxTokens;
-                _lLMModel.Temperature = double.TryParse(appSettings.DefaultTemparature, out var temperature) ? temperature : Constants.LLM.Temperature;
-                _lLMModel.MaxMessages = int.TryParse(appSettings.MaxMessages, out var maxMessages) ? maxMessages : Constants.LLM.MaxMessages;
+                _lLMModel.MaxTokens = int.TryParse(appSettings.DefaultMaxTokens, out var maxTokens) ? maxTokens : Constants.LLM.DefaultMaxTokens;
+                _lLMModel.Temperature = double.TryParse(appSettings.DefaultTemparature, out var temperature) ? temperature : Constants.LLM.DefaultTemperature;
+                _lLMModel.MaxMessages = int.TryParse(appSettings.MaxMessages, out var maxMessages) ? maxMessages : Constants.LLM.DefaultMaxMessages;
 
                 if (providerName == Constants.Providers.Gemini.ToString())
                     _lLMModel.Client = new LLMClient(new GeminiProvider(_lLMModel.ApiKey, _lLMModel.Model), _lLMModel.MaxTokens, _lLMModel.Temperature, _lLMModel.MaxMessages);

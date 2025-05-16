@@ -54,7 +54,7 @@ namespace AI_Assistant
                 DefaultProvider = defaultProvider,
                 DefaultTemparature = configuration["LLM:DefaultTemparature"],
                 DefaultMaxTokens = configuration["LLM:DefaultMaxTokens"],
-                MaxMessages = configuration["Conversation:MaxMessages"],
+                MaxMessages = configuration["Conversation:DefaultMaxMessages"],
                 ProviderApiKey = configuration[$"LLM:{defaultProvider}:ApiKey"],
                 ProviderModel = configuration[$"LLM:{defaultProvider}:Model"],
                 AllProviderNames = providerNames
