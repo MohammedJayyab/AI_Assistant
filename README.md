@@ -1,6 +1,7 @@
 # AI Assistant
 
-A powerful Windows Forms application that provides a user-friendly interface for interacting with various AI models. The application supports multiple AI providers, image analysis, and specialized AI tasks.
+A powerful Windows Forms application that provides a user-friendly interface for interacting with various AI models. 
+The application supports multiple AI providers, image analysis, and specialized AI tasks.
 
 ## Features
 
@@ -45,7 +46,7 @@ A powerful Windows Forms application that provides a user-friendly interface for
 
 1. Clone the repository:
 ```bash
-git clone [repository-url]
+git clone https://github.com/MohammedJayyab/AI_Assistant
 ```
 
 2. Open the solution in Visual Studio:
@@ -54,7 +55,7 @@ cd AI_Assistant
 ```
 
 3. Configure your AI provider settings:
-   - Copy `appsettings.example.json` to `appsettings.Local.json`
+   - Copy `AI_Assistant/appsettings.example.json` to `AI_Assistant/appsettings.Local.json`
    - Update the API keys and model settings in `appsettings.Local.json`
 
 4. Build and run the application:
@@ -67,8 +68,8 @@ dotnet run
 
 The application uses JSON configuration files for settings:
 
-- `appsettings.example.json`: Template configuration file
-- `appsettings.Local.json`: Your local configuration (not tracked in source control)
+- `AI_Assistant/appsettings.example.json`: Template configuration file
+- `AI_Assistant/appsettings.Local.json`: Your local configuration (not tracked in source control)
 
 Example configuration:
 ```json
@@ -112,31 +113,47 @@ Example configuration:
    - Use "New Chat" to start fresh
    - Adjust context window size with "Update Size"
 
-## Project Structure
+## Solution Structure
 
 ```
 AI_Assistant/
-├── frmAssistant.cs              # Main form implementation
-├── frmAssistant.Designer.cs     # Form design
-├── ImageHelper.cs               # Image handling utilities
-├── Program.cs                   # Application entry point
-├── SystemMessagesConstants.cs   # AI system prompts
-├── appsettings.example.json     # Configuration template
-└── AI_Assistant.csproj         # Project file
+├── AI_Assistant/                # Main project directory
+│   ├── frmAssistant.cs         # Main form implementation
+│   ├── frmAssistant.Designer.cs # Form design
+│   ├── ImageHelper.cs          # Image handling utilities
+│   ├── Program.cs              # Application entry point
+│   ├── Constants.cs            # Application constants
+│   ├── appsettings.example.json # Configuration template
+│   └── AI_Assistant.csproj     # Project file
+└── AI_Assistant.sln            # Solution file
 ```
 
 ## Dependencies
 
 - Microsoft.Web.WebView2 (v1.0.3240.44)
 - Microsoft.Extensions.Configuration.Json (v9.0.5)
-- Custom LLMKit library
+- [LLMKit](https://github.com/MohammedJayyab/LLMKit) - A thread-safe .NET library that provides a unified interface for interacting with various Large Language Models (LLMs)
+
+### LLMKit Integration
+
+This application uses [LLMKit](https://github.com/MohammedJayyab/LLMKit) as its core library for AI model interactions. LLMKit provides:
+
+- Unified interface for multiple LLM providers (OpenAI, Gemini, DeepSeek)
+- Thread-safe implementation
+- Conversation management
+- Fluent API for message building
+- Configurable parameters (tokens, temperature, etc.)
+- Comprehensive error handling
+- Dependency injection support
+- Cancellation token support
+- Custom endpoint support for all providers
 
 ## Development
 
 ### Adding New Features
 
 1. **New AI Task**
-   - Add system message in `SystemMessagesConstants.cs`
+   - Add system message in `Constants.cs`
    - Create button in form designer
    - Implement handler in `frmAssistant.cs`
 
@@ -163,8 +180,4 @@ AI_Assistant/
 
 ## License
 
-[Your License Here]
-
-## Support
-
-For support, please [contact information or issue tracker link] 
+MIT 
