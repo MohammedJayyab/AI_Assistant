@@ -207,8 +207,12 @@ namespace AI_Assistant
 
         private async void btnCaptureAndAskImage_Click(object sender, EventArgs e)
         {
-            string tempImagesPath = ImageHelper.GetTempImagesFolderPath();
-            string imagePath = ImageHelper.SaveClipboardImageAsJpg(tempImagesPath);
+            string imagePath = ImageHelper.SaveClipboardImageAsJpg();
+            if (string.IsNullOrEmpty(imagePath))
+            {
+                MessageBox.Show("No image found in the clipboard.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             txtImageUrl.Text = imagePath;
 
             _llmModel.Client.SetSystemMessage(Constants.SystemMessages.Image);

@@ -4,7 +4,7 @@ namespace AI_Assistant;
 
 public static class ImageHelper
 {
-    public static string GetTempImagesFolderPath()
+    private static string GetTempImagesFolderPath()
     {
         // Get the base directory of the application (usually the bin folder or a subfolder within it)
         string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
@@ -34,8 +34,9 @@ public static class ImageHelper
     /// </summary>
     /// <param name="directoryPath">The directory where the image will be saved.</param>
     /// <returns>The full path of the saved image file, or null if no image was found on the clipboard or an error occurred.</returns>
-    public static string SaveClipboardImageAsJpg(string directoryPath)
+    public static string SaveClipboardImageAsJpg()
     {
+        string directoryPath = GetTempImagesFolderPath();
         // Ensure the directory exists
         if (!Directory.Exists(directoryPath))
         {
@@ -86,7 +87,7 @@ public static class ImageHelper
         }
         else
         {
-            return null;
+            return string.Empty;
         }
     }
 }

@@ -22,7 +22,7 @@ namespace AI_Assistant
             public const string EmailResponse = $"{BasePrefix}. Write a professional simple but accurate response for the provided email.";
             public const string Prompt = $"{BasePrefix}. Generate a professional well structured prompt, that will be used by LLM AI for the provided text.";
             public const string Code = $"{BasePrefix}. Write a code for the provided text.";
-            public const string Image = $"{BasePrefix}. Please explain the attached image shortly.";
+            public const string Image = $"{BasePrefix}. Please explain the attached image shortly. Highlight important/head words";
         }
 
         public static class LLM
