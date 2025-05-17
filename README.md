@@ -3,6 +3,7 @@
 A powerful Windows Forms application that provides a user-friendly interface for interacting with various AI models. 
 The application supports multiple AI providers, image analysis, and specialized AI tasks.
 
+![UI Assistant Screenshot](https://raw.githubusercontent.com/MohammedJayyab/AI_Assistant/master/AI_Assistant/images/UI_Assistant.png)
 ## Features
 
 - 🤖 **Multiple AI Providers**
@@ -33,7 +34,7 @@ The application supports multiple AI providers, image analysis, and specialized 
   - HTML-formatted responses
   - Real-time interaction
   - Adjustable context window
-![UI Assistant Screenshot](https://raw.githubusercontent.com/MohammedJayyab/AI_Assistant/master/AI_Assistant/images/UI_Assistant.png)
+
 
 ## Prerequisites
 
