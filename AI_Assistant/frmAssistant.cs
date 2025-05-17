@@ -133,7 +133,10 @@ namespace AI_Assistant
             else
             {
                 formattedText = cleanedText.Replace("Assistant >>", "<strong style=\"color: #4285f4;\">Answer:</strong>");
-                formattedText = $"<div style=\"margin-bottom: 6px;\">{formattedText}</div>"; // Add a little spacing
+                formattedText = $"<div style=\"margin-bottom: 6px;\">{formattedText}</div>";
+                // add new line
+                formattedText += "<br>";
+                formattedText += "<br>";
             }
 
             _accumulatedHtml += formattedText;
@@ -149,11 +152,7 @@ namespace AI_Assistant
             }
             else if (e.Control && e.KeyCode == Keys.V)
             {
-                if (Clipboard.ContainsText())
-                {
-                    txtPrompt.AppendText(Clipboard.GetText());
-                }
-                else if (Clipboard.ContainsImage())
+                if (Clipboard.ContainsImage())
                 {
                     // Handle image paste if needed
                     string imagePath = ImageHelper.SaveClipboardImageAsJpg();

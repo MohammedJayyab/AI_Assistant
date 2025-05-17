@@ -27,7 +27,6 @@ The application supports multiple AI providers, image analysis, and specialized 
   - Clipboard image capture
   - Image file upload
   - AI-powered image explanation
-  - Code challenge solutions from images
 
 - 💻 **Modern UI**
   - Clean, intuitive interface
@@ -105,13 +104,11 @@ Example configuration:
    - Or use "P>>" to capture from clipboard
    - Click "Explain Img" for AI analysis
 
-4. **Language Selection**
+4. **Language Translate**
    - Choose between Arabic (Ar), English (En), or German (De)
    - Default is Arabic
 
-5. **Context Management**
-   - Use "New Chat" to start fresh
-   - Adjust context window size with "Update Size"
+
 
 ## Solution Structure
 
@@ -158,7 +155,7 @@ This application uses [LLMKit](https://github.com/MohammedJayyab/LLMKit) as its 
    - Implement handler in `frmAssistant.cs`
 
 2. **New AI Provider**
-   - Add configuration in `appsettings.json`
+   - Add configuration in `appsettings.local.json`
    - Implement provider in LLMKit library
    - Update provider selection logic
 
