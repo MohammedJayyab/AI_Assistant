@@ -95,14 +95,14 @@ Example configuration:
    - Press Enter or click "Send"
 
 2. **Specialized Tasks**
-   - Select the appropriate task button
    - Enter your text
+   - Select the appropriate task button
    - Get AI-powered response
 
 3. **Image Analysis**
-   - Use "Browse" to select an image file
-   - Or use "P>>" to capture from clipboard
-   - Click "Explain Img" for AI analysis
+   - Use "Add Image" to select an image file
+   - Or use "Ctl + V" to capture from clipboard
+   - Write your prompt Or click 'Send' for AI analysis
 
 4. **Language Translate**
    - Choose between Arabic (Ar), English (En), or German (De)
