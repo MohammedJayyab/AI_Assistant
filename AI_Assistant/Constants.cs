@@ -11,7 +11,7 @@ namespace AI_Assistant
             public const string Default = BasePrefix;
             public const string Search = $"{BasePrefix}. Search in the internet-online for the user reques in the provided text.";
             public const string Summarize = $"{BasePrefix}. Summarize professionally the provided text.";
-            public const string Translate = $"{BasePrefix}. Translate the provided text to the specified language.";
+            public const string Translate = $"{BasePrefix}. Translate the provided text to the specified language. for arabic please maintaine the text direction.";
             public const string KeyPoints = $"{BasePrefix}. Extract the key points from the provided text.";
             public const string Explain = $"{BasePrefix}. Explain the provided text in simple terms.";
             public const string Fix = $"{BasePrefix}. Fix the provided text.";

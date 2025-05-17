@@ -98,11 +98,11 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(42, 140);
+            label3.Location = new Point(99, 141);
             label3.Name = "label3";
-            label3.Size = new Size(171, 25);
+            label3.Size = new Size(114, 25);
             label3.TabIndex = 3;
-            label3.Text = "DefaultTemperature:";
+            label3.Text = "Temperature:";
             // 
             // label2
             // 
