@@ -1,5 +1,3 @@
-using System;
-
 namespace AI_Assistant
 {
     public static class Constants
@@ -7,7 +5,7 @@ namespace AI_Assistant
         public static class SystemMessages
         {
             private const string BasePrefix = @"You are a helpful assistant. response to user request as best as you can as simple html and reduce empty spaces.
-                            highlight important keywords and Terms, formatted pretty code when user asked for source code,
+                            highlight important keywords and Terms, formatted pretty source code including tags for requested language, when user asked for source code,
                                     and use suitable font name.";
 
             public const string Default = BasePrefix;
@@ -22,7 +20,7 @@ namespace AI_Assistant
             public const string EmailResponse = $"{BasePrefix}. Write a professional simple but accurate response for the provided email.";
             public const string Prompt = $"{BasePrefix}. Generate a professional well structured prompt, that will be used by LLM AI for the provided text.";
             public const string Code = $"{BasePrefix}. Write a code for the provided text.";
-            public const string Image = $"{BasePrefix}. Please explain the attached image shortly. Highlight important/head words";
+            public const string Image = $"{BasePrefix}. Please explain the attached image shortly, If it has text, also write its content. Highlight important/head words";
         }
 
         public static class LLM
