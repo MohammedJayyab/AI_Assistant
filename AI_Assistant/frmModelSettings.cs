@@ -16,6 +16,8 @@ namespace AI_Assistant
         private void InitJsonSetting()
         {
             AppSettings appSettings = AppSettings.LoadSettings();
+            // Clear existing items to prevent duplicates
+            cmbDefaultLLM.Items.Clear();
             // get the list of all provider names
             var providerNames = appSettings.AllProviderNames;
             // fill the combo box with the provider names

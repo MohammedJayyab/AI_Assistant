@@ -8,6 +8,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageIcon></PackageIcon>
     <ApplicationIcon>images\assistant.ico</ApplicationIcon>
+    <NoWarn>$(NoWarn);MSB3277;MSB3276</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +21,14 @@
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3240.44" />
     <PackageReference Include="pythonnet" Version="3.0.5" />
   </ItemGroup>
+
+  <Target Name="ExcludeWpfWebView2" BeforeTargets="ResolveAssemblyReferences" AfterTargets="ResolvePackageAssets">
+    <ItemGroup>
+      <ReferencePath Remove="@(ReferencePath)" Condition="'%(Filename)' == 'Microsoft.Web.WebView2.Wpf'" />
+      <ReferencePath Remove="@(ReferencePath)" Condition="$([System.String]::Copy('%(Identity)').Contains('Microsoft.Web.WebView2.Wpf'))" />
+      <ReferencePath Remove="@(ReferencePath)" Condition="$([System.String]::Copy('%(Identity)').Contains('lib_manual'))" />
+    </ItemGroup>
+  </Target>
 
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
