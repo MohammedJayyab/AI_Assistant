@@ -1,4 +1,3 @@
-﻿using Microsoft.Extensions.FileSystemGlobbing;
 using System.Text.Json;
 
 namespace AI_Assistant

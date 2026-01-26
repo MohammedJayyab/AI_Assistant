@@ -6,7 +6,7 @@ namespace AI_Assistant
         {
             private const string BasePrefix = @"You are a helpful assistant. response to user request as best as you can as simple html and reduce empty spaces.
                             highlight important keywords and Terms, formatted pretty source code including tags for requested language, when user asked for source code,
-                                    and use suitable font name.";
+                                    and use suitable font name. Consider the text alignment, based on the text language en, or arabic, but keep the terms keywords in English as possible.";
 
             public const string Default = BasePrefix;
             public const string Search = $"{BasePrefix}. Search in the internet-online for the user reques in the provided text.";
@@ -19,7 +19,12 @@ namespace AI_Assistant
             public const string RefineText = $"{BasePrefix}. Refine the provided text professionally.";
             public const string EmailResponse = $"{BasePrefix}. Write a professional simple but accurate response for the provided email.";
             public const string Prompt = $"{BasePrefix}. Generate a professional well structured prompt, that will be used by LLM AI for the provided text.";
+            public const string MindMap = $"{BasePrefix}. You are an expert mind map creator. Read the provided content carefully and generate a text, tree-structured mind map. Focus only on key concepts, using very abstract terms. Bold the most important keywords. No explanations. Output only the structured mind map.";
+            public const string Format = $"{BasePrefix}. Format the provided text to be more readable and professional. do not changed the content.";
+
+            // not used
             public const string Code = $"{BasePrefix}. Write a code for the provided text.";
+
             public const string Image = $"{BasePrefix}. Please explain the attached image shortly, If it has text, also write its content. Highlight important/head words";
         }
 
@@ -41,6 +46,21 @@ namespace AI_Assistant
         public static class FileSystem
         {
             public const string ImageFolder = "Temp_Images";
+        }
+
+        public static class PythonConstants
+        {
+            // Path to your Python virtual environment folder
+            public const string PythonHome = @"C:\Users\mjayy\source\repos\youtub-to-transcript\venv";
+
+            // Path to the python DLL
+            public const string PythonDll = @"C:\Python310\python310.dll";
+
+            // Path to the folder containing your Python scripts
+            public const string PythonScriptsPath = @"C:\Users\mjayy\source\repos\youtub-to-transcript";
+
+            // Path to the virtual environment site-packages folder
+            public const string PythonSitePackagesPath = @"C:\Users\mjayy\source\repos\youtub-to-transcript\venv\Lib\site-packages";
         }
 
         public enum Language

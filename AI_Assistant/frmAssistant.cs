@@ -224,6 +224,38 @@ namespace AI_Assistant
             await GetResponseAsync(txtPrompt.Text.Trim());
         }
 
+        private async void btnMindmap_Click(object sender, EventArgs e)
+        {
+            _llmModel.Client.SetSystemMessage(Constants.SystemMessages.MindMap);
+            txtPrompt.Text = "The content is: \n\n" + txtPrompt.Text;
+            await GetResponseAsync(txtPrompt.Text.Trim());
+        }
+
+        private async void btnYoutubeScript_Click(object sender, EventArgs e)
+        {
+            //txtPrompt.Text = "The content is: \n\n" + txtPrompt.Text;
+            YoutubeTranscriptFetcher youtubeTranscriptFetcher = new YoutubeTranscriptFetcher();
+            var (title, script) = youtubeTranscriptFetcher.FetchTranscript(txtPrompt.Text.Trim());
+
+            AddToResponse($"Youtube Transcript<br> Title: '{title}' <br>  {script.Trim()}");
+            txtPrompt.Clear();
+            txtPrompt.Focus();
+        }
+
+        private async void btnYoutubeSummary_Click(object sender, EventArgs e)
+        {
+            //txtPrompt.Text = "The content is: \n\n" + txtPrompt.Text;
+            YoutubeTranscriptFetcher youtubeTranscriptFetcher = new YoutubeTranscriptFetcher();
+            var (title, script) = youtubeTranscriptFetcher.FetchTranscript(txtPrompt.Text.Trim());
+            AddToResponse($"Youtube Transcript<br> Title: '{title}' <br>  {script.Trim()}");
+            txtPrompt.Clear();
+            txtPrompt.Focus();
+
+            _llmModel.Client.SetSystemMessage(Constants.SystemMessages.KeyPoints);
+            txtPrompt.Text = $"Extract the key points, but show 'Title: {title}' from the following youtube transcript: \n\n {script}";
+            await GetResponseAsync(txtPrompt.Text.Trim());
+        }
+
         private void radioAr_CheckedChanged(object sender, EventArgs e)
         {
             _defaultLanguage = Constants.Language.Arabic.ToString();
@@ -272,6 +304,9 @@ namespace AI_Assistant
             btnOnlyKeyPoints.Enabled = enabled;
             btnEmailResponse.Enabled = enabled;
             btnPrompt.Enabled = enabled;
+            btnMindmap.Enabled = enabled;
+            btnYoutubeScript.Enabled = enabled;
+            btnYoutubeSummary.Enabled = enabled;
             //btnImage.Enabled = enabled;
             //btnCaptureAndAskImage.Enabled = enabled;
         }
@@ -321,6 +356,15 @@ namespace AI_Assistant
             {
                 btnAddImage.ImageIndex = 0; // add image icon shown now
                 btnAddImage.Text = "Add Image"; // Reset button text
+            }
+        }
+
+        private void frmAssistant_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (_webView != null)
+            {
+                _webView.Dispose(); // Properly dispose of WebView2
+                _webView = null;
             }
         }
     }
