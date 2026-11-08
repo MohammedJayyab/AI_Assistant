@@ -33,6 +33,7 @@ namespace AI_Assistant
         private int _tokensIn;
         private string _summary; // after a compaction: the summary that replaced the old messages sent to the LLM
         private string _promptKey = Constants.Prompts.Default; // the system prompt of the next request
+        private (string PromptKey, string ImagePath) _lastAnswered = (Constants.Prompts.Default, string.Empty); // how the last answer was asked, so Re-Generate asks the same way
 
         public frmAssistant()
         {
@@ -80,6 +81,66 @@ namespace AI_Assistant
             else if (action == "resend")
             {
                 await ResendEditedQuestionAsync(text);
+            }
+            else if (action == "regenerate")
+            {
+                await RegenerateLastAnswerAsync();
+            }
+        }
+
+        // Asks the last question again, with the same prompt and image: the new answer replaces the last one in place,
+        // in the LLM context, the chat and the history. When no new answer comes (an error or an empty answer), the previous one is kept.
+        private async Task RegenerateLastAnswerAsync()
+        {
+            if (_requestTimer.IsRunning || !txtPrompt.Enabled)
+            {
+                lblStatus.Text = "Please wait for the current request before regenerating";
+                return;
+            }
+
+            int answerIndex = _session.Entries.Count - 1;
+            if (answerIndex < 1 || !_session.Entries[answerIndex].Text.StartsWith(AssistantPrefix) || !_session.Entries[answerIndex - 1].Text.StartsWith(UserPrefix))
+            {
+                return; // only the last answer, right after its question
+            }
+
+            var (promptKey, imagePath) = _lastAnswered;
+            bool withImage = imagePath.Length > 0;
+            if (withImage && !File.Exists(imagePath))
+            {
+                MessageBox.Show("The image of this question was deleted, so the answer cannot be regenerated with it. Attach the image again and send the question.", "Re-Generate", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            if (withImage && !_llmModel.Client.Capabilities.SupportsImages)
+            {
+                MessageBox.Show($"This question has an image, and {_llmModel.Provider} does not accept images. Choose another provider in the settings to regenerate it.", "Re-Generate", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            ChatEntry question = _session.Entries[answerIndex - 1];
+            ChatEntry previousAnswer = _session.Entries[answerIndex];
+            _session.Entries.RemoveRange(answerIndex - 1, 2);
+            _accumulatedHtml = string.Concat(_session.Entries.Select(entry => FormatMessage(entry.Text)));
+
+            string draft = txtPrompt.Text; // what was typed (and attached) for the next message meanwhile
+            string draftImage = txtImageUrl.Text;
+            string questionText = question.Text.Substring(UserPrefix.Length).Trim();
+            txtPrompt.Text = questionText;
+            txtImageUrl.Text = imagePath;
+            SetSystemMessage(promptKey);
+            await GetResponseAsync(questionText, withImage);
+            txtPrompt.Text = draft;
+            txtImageUrl.Text = draftImage;
+
+            if (_session.Entries.LastOrDefault()?.Text.StartsWith(AssistantPrefix) != true && !_lifetime.IsCancellationRequested)
+            {
+                // no new answer (the reason is already shown): the previous answer is back in its place
+                if (_session.Entries.LastOrDefault()?.Text.StartsWith(UserPrefix) != true)
+                {
+                    AddToResponse(question.Text);
+                }
+                AddToResponse(previousAnswer.Text);
+                lblStatus.Text += ". The previous answer is kept.";
             }
         }
 
@@ -335,6 +396,7 @@ namespace AI_Assistant
 
                 lblStatus.Text = $"Done in {_requestTimer.Elapsed.TotalSeconds:0.0} s{(problem != null ? $". {problem}" : string.Empty)}";
                 AddToResponse($"{AssistantPrefix}  {response.Trim()}");
+                _lastAnswered = (_promptKey, isForImage ? txtImageUrl.Text : string.Empty);
             }
             catch (Exception) when (_lifetime.IsCancellationRequested)
             {
@@ -427,6 +489,7 @@ namespace AI_Assistant
             lblStatus.Text = "Ready";
             lblTokens.Text = NoTokensText;
             _summary = null;
+            _lastAnswered = (Constants.Prompts.Default, string.Empty); // a chat opened from the history regenerates with the default prompt
             _llmModel.Client.ClearConversation();
             SetSystemMessage(Constants.Prompts.Default);
             UpdateConversationStatus();
@@ -493,7 +556,7 @@ namespace AI_Assistant
                     body = cleanedText.Substring(AssistantPrefix.Length);
                     cssClass = "msg assistant";
                 }
-                formattedText = $"<div class=\"{cssClass}\" style=\"margin-bottom: 6px;\">{label}<span class=\"msg-body\">{body}</span>{Htmltemplate.MessageActions(false)}</div>";
+                formattedText = $"<div class=\"{cssClass}\" style=\"margin-bottom: 6px;\">{label}<span class=\"msg-body\">{body}</span>{Htmltemplate.MessageActions(false, isAnswer: cleanedText.StartsWith(AssistantPrefix))}</div>";
                 // add new line
                 formattedText += "<br>";
                 formattedText += "<br>";

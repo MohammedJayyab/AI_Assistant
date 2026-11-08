@@ -2,9 +2,9 @@ namespace AI_Assistant
 {
     public static class Htmltemplate
     {
-        // Style and script of the buttons shown on every message: Copy, and Edit + Send on the last question.
+        // Style and script of the buttons shown on every message: Copy, Edit + Send on the last question, and Re-Generate on the last answer.
         // The script posts JSON messages to the host (see frmAssistant.WebView_WebMessageReceived):
-        // { action: 'copy', text } and { action: 'resend', text }.
+        // { action: 'copy', text }, { action: 'resend', text } and { action: 'regenerate', text: '' }.
         public static string MessageSupport = @"<style>
     .msg-actions { text-align: right; margin-top: 4px; }
     .msg-actions button { font-size: 11px; padding: 1px 10px; margin-left: 4px; border: 1px solid #c8d3e6; border-radius: 10px; background: #fff; color: #3367d6; cursor: pointer; }
@@ -12,6 +12,8 @@ namespace AI_Assistant
     .msg-actions button:disabled { color: #aaa; border-color: #ddd; cursor: default; }
     .edit-btn, .send-btn { display: none; }
     .msg.user.editable .edit-btn, .msg.user.editable .send-btn { display: inline-block; }
+    .regen-btn { display: none; }
+    .msg.assistant.regenerable .regen-btn { display: inline-block; }
     .msg.user.editing .msg-body { display: block; text-align: left; background: #fff; border: 1px solid #4285f4; border-radius: 4px; padding: 6px; white-space: pre-wrap; outline: none; }
 </style>
 <script>
@@ -60,6 +62,16 @@ namespace AI_Assistant
         post('resend', normalize(msg.querySelector('.msg-body').innerText));
     }
 
+    function regenerateMsg(btn) {
+        post('regenerate', '');
+    }
+
+    // Only the last answer can be regenerated, while it is the last message of the chat.
+    document.addEventListener('DOMContentLoaded', function () {
+        var all = document.querySelectorAll('.msg');
+        if (all.length > 0 && all[all.length - 1].classList.contains('assistant')) all[all.length - 1].classList.add('regenerable');
+    });
+
     // Only the last question can be edited, and not once a summary has replaced it in the conversation.
     document.addEventListener('DOMContentLoaded', function () {
         var users = document.querySelectorAll('.msg.user');
@@ -72,13 +84,17 @@ namespace AI_Assistant
 </script>
 ";
 
-        public static string MessageActions(bool isUserMessage)
+        public static string MessageActions(bool isUserMessage, bool isAnswer = false)
         {
             string buttons = @"<button class=""copy-btn"" onclick=""copyMsg(this)"">Copy</button>";
             if (isUserMessage)
             {
                 buttons += @"<button class=""edit-btn"" onclick=""editMsg(this)"">Edit</button>" +
                            @"<button class=""send-btn"" onclick=""sendEdit(this)"" disabled>Send</button>";
+            }
+            if (isAnswer)
+            {
+                buttons += @"<button class=""regen-btn"" onclick=""regenerateMsg(this)"" title=""Ask the same question again: the new answer replaces this one"">Re-Generate</button>";
             }
             return $@"<div class=""msg-actions"">{buttons}</div>";
         }
