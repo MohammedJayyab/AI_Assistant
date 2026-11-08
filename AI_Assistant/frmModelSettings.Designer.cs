@@ -33,6 +33,8 @@
             txtMaxMessages = new TextBox();
             txtDefaultTemperature = new TextBox();
             txtDefaultMaxTokens = new TextBox();
+            label5 = new Label();
+            cmbReasoningEffort = new ComboBox();
             label4 = new Label();
             label3 = new Label();
             label2 = new Label();
@@ -42,11 +44,14 @@
             btnCancel = new Button();
             btnOpenJson = new Button();
             btnLoad = new Button();
+            btnEditPrompts = new Button();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(cmbReasoningEffort);
+            groupBox1.Controls.Add(label5);
             groupBox1.Controls.Add(txtMaxMessages);
             groupBox1.Controls.Add(txtDefaultTemperature);
             groupBox1.Controls.Add(txtDefaultMaxTokens);
@@ -57,7 +62,7 @@
             groupBox1.Controls.Add(label1);
             groupBox1.Location = new Point(23, 30);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(625, 259);
+            groupBox1.Size = new Size(625, 306);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "LLM Setting ::Json";
@@ -65,10 +70,10 @@
             // txtMaxMessages
             // 
             txtMaxMessages.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            txtMaxMessages.Location = new Point(236, 185);
+            txtMaxMessages.Location = new Point(236, 232);
             txtMaxMessages.Name = "txtMaxMessages";
             txtMaxMessages.Size = new Size(230, 31);
-            txtMaxMessages.TabIndex = 6;
+            txtMaxMessages.TabIndex = 7;
             // 
             // txtDefaultTemperature
             // 
@@ -86,10 +91,31 @@
             txtDefaultMaxTokens.Size = new Size(230, 31);
             txtDefaultMaxTokens.TabIndex = 4;
             // 
+            // cmbReasoningEffort
+            //
+            cmbReasoningEffort.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            cmbReasoningEffort.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbReasoningEffort.FlatStyle = FlatStyle.System;
+            cmbReasoningEffort.FormattingEnabled = true;
+            cmbReasoningEffort.Items.AddRange(new object[] { "Default", "None", "Low", "Medium", "High" });
+            cmbReasoningEffort.Location = new Point(236, 183);
+            cmbReasoningEffort.Name = "cmbReasoningEffort";
+            cmbReasoningEffort.Size = new Size(233, 33);
+            cmbReasoningEffort.TabIndex = 6;
+            //
+            // label5
+            //
+            label5.AutoSize = true;
+            label5.Location = new Point(81, 186);
+            label5.Name = "label5";
+            label5.Size = new Size(132, 25);
+            label5.TabIndex = 3;
+            label5.Text = "Thinking Level:";
+            //
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(81, 188);
+            label4.Location = new Point(81, 235);
             label4.Name = "label4";
             label4.Size = new Size(132, 25);
             label4.TabIndex = 3;
@@ -123,6 +149,7 @@
             cmbDefaultLLM.Name = "cmbDefaultLLM";
             cmbDefaultLLM.Size = new Size(233, 33);
             cmbDefaultLLM.TabIndex = 1;
+            cmbDefaultLLM.SelectedIndexChanged += cmbDefaultLLM_SelectedIndexChanged;
             // 
             // label1
             // 
@@ -135,7 +162,7 @@
             // 
             // btnSave
             // 
-            btnSave.Location = new Point(485, 304);
+            btnSave.Location = new Point(485, 351);
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(153, 42);
             btnSave.TabIndex = 1;
@@ -145,7 +172,7 @@
             // 
             // btnCancel
             // 
-            btnCancel.Location = new Point(485, 352);
+            btnCancel.Location = new Point(485, 399);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(153, 42);
             btnCancel.TabIndex = 2;
@@ -154,7 +181,7 @@
             // 
             // btnOpenJson
             // 
-            btnOpenJson.Location = new Point(182, 304);
+            btnOpenJson.Location = new Point(182, 351);
             btnOpenJson.Name = "btnOpenJson";
             btnOpenJson.Size = new Size(153, 42);
             btnOpenJson.TabIndex = 3;
@@ -164,20 +191,31 @@
             // 
             // btnLoad
             // 
-            btnLoad.Location = new Point(23, 304);
+            btnLoad.Location = new Point(23, 351);
             btnLoad.Name = "btnLoad";
             btnLoad.Size = new Size(153, 42);
             btnLoad.TabIndex = 4;
             btnLoad.Text = "Load";
             btnLoad.UseVisualStyleBackColor = true;
             btnLoad.Click += btnLoad_Click;
-            // 
+            //
+            // btnEditPrompts
+            //
+            btnEditPrompts.Location = new Point(23, 399);
+            btnEditPrompts.Name = "btnEditPrompts";
+            btnEditPrompts.Size = new Size(312, 42);
+            btnEditPrompts.TabIndex = 5;
+            btnEditPrompts.Text = "Edit Prompts";
+            btnEditPrompts.UseVisualStyleBackColor = true;
+            btnEditPrompts.Click += btnEditPrompts_Click;
+            //
             // frmModelSettings
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = btnCancel;
-            ClientSize = new Size(669, 432);
+            ClientSize = new Size(669, 479);
+            Controls.Add(btnEditPrompts);
             Controls.Add(btnLoad);
             Controls.Add(btnOpenJson);
             Controls.Add(btnCancel);
@@ -207,7 +245,10 @@
         private TextBox txtDefaultTemperature;
         private TextBox txtDefaultMaxTokens;
         private Label label4;
+        private Label label5;
+        private ComboBox cmbReasoningEffort;
         private Button btnOpenJson;
         private Button btnLoad;
+        private Button btnEditPrompts;
     }
 }

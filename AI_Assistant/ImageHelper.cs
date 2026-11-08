@@ -4,7 +4,7 @@ namespace AI_Assistant;
 
 public static class ImageHelper
 {
-    private static string GetTempImagesFolderPath()
+    public static string GetTempImagesFolderPath()
     {
         // Get the base directory of the application (usually the bin folder or a subfolder within it)
         string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
@@ -26,6 +26,44 @@ public static class ImageHelper
         }
 
         return tempImagesPath;
+    }
+
+    // The pasted images saved by this application.
+    private static string[] GetTempImages()
+    {
+        string folder = Path.Combine(AppContext.BaseDirectory, Constants.FileSystem.ImageFolder);
+        try
+        {
+            return Directory.Exists(folder) ? Directory.GetFiles(folder, "*.jpg") : Array.Empty<string>();
+        }
+        catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
+        {
+            return Array.Empty<string>(); // the folder cannot be read: nothing to delete
+        }
+    }
+
+    public static int CountTempImages() => GetTempImages().Length;
+
+    /// <summary>
+    /// Deletes the pasted images saved by this application: they are only needed while it runs.
+    /// Returns how many were deleted; a file still in use stays, and a later clean-up removes it.
+    /// </summary>
+    public static int DeleteTempImages()
+    {
+        int deleted = 0;
+        foreach (string file in GetTempImages())
+        {
+            try
+            {
+                File.Delete(file);
+                deleted++;
+            }
+            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
+            {
+                // in use (for example open in an image viewer): the other images are still deleted
+            }
+        }
+        return deleted;
     }
 
     /// <summary>

@@ -2,30 +2,20 @@ namespace AI_Assistant
 {
     public static class Constants
     {
-        public static class SystemMessages
+        public static class Prompts
         {
-            private const string BasePrefix = @"You are a helpful assistant. response to user request as best as you can as simple html and reduce empty spaces.
-                            highlight important keywords and Terms, formatted pretty source code including tags for requested language, when user asked for source code,
-                                    and use suitable font name. Consider the text alignment, based on the text language en, or arabic, but keep the terms keywords in English as possible.";
-
-            public const string Default = BasePrefix;
-            public const string Search = $"{BasePrefix}. Search in the internet-online for the user reques in the provided text.";
-            public const string Summarize = $"{BasePrefix}. Summarize professionally the provided text.";
-            public const string Translate = $"{BasePrefix}. Translate the provided text to the specified language. for arabic please maintaine the text direction.";
-            public const string KeyPoints = $"{BasePrefix}. Extract the key points from the provided text.";
-            public const string Explain = $"{BasePrefix}. Explain the provided text in simple terms.";
-            public const string Fix = $"{BasePrefix}. Fix the provided text.";
-            public const string Brainstorm = $"{BasePrefix}. Brainstorm ideas based on the provided text.";
-            public const string RefineText = $"{BasePrefix}. Refine the provided text professionally.";
-            public const string EmailResponse = $"{BasePrefix}. Write a professional simple but accurate response for the provided email.";
-            public const string Prompt = $"{BasePrefix}. Generate a professional well structured prompt, that will be used by LLM AI for the provided text.";
-            public const string MindMap = $"{BasePrefix}. You are an expert mind map creator. Read the provided content carefully and generate a text, tree-structured mind map. Focus only on key concepts, using very abstract terms. Bold the most important keywords. No explanations. Output only the structured mind map.";
-            public const string Format = $"{BasePrefix}. Format the provided text to be more readable and professional. do not changed the content.";
-
-            // not used
-            public const string Code = $"{BasePrefix}. Write a code for the provided text.";
-
-            public const string Image = $"{BasePrefix}. Please explain the attached image shortly, If it has text, also write its content. Highlight important/head words";
+            public const string Default = "Default";
+            public const string Image = "Image";
+            public const string Summarize = "Summarize";
+            public const string Translate = "Translate";
+            public const string Explain = "Explain";
+            public const string KeyPoints = "KeyPoints";
+            public const string EmailResponse = "EmailResponse";
+            public const string Prompt = "Prompt";
+            public const string MindMap = "MindMap";
+            public const string YoutubeSummary = "YoutubeSummary";
+            public const string Compact = "Compact";
+            public const string CompactContext = "CompactContext";
         }
 
         public static class LLM
@@ -36,7 +26,10 @@ namespace AI_Assistant
             public const double DefaultTemperature = 0.3;
             public const int DefaultMaxMessages = 25;
             public const int MinMessages = 2;
-            public const int MaxMessages = 50;
+            public const int MaxMessages = 100;
+            public const double MessagesWarningRatio = 0.75; // the used messages turn orange
+            public const double MessagesCriticalRatio = 0.9; // and red
+            public const string ReasoningDefault = "Default"; // no thinking level in the settings: the provider decides
             public const double MinTemperature = 0.0;
             public const double MaxTemperature = 1.0;
             public const int MinTokens = 1000;
@@ -46,6 +39,9 @@ namespace AI_Assistant
         public static class FileSystem
         {
             public const string ImageFolder = "Temp_Images";
+            public const string HistoryFolder = "History";
+            public const string PromptsFile = "prompts.json";
+            public const string WindowFile = "window.json";
         }
 
         public static class PythonConstants

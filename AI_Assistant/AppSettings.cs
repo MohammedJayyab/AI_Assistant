@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Globalization;
+using LLMKit.Models;
 using Microsoft.Extensions.Configuration;
 
 namespace AI_Assistant
@@ -7,11 +7,8 @@ namespace AI_Assistant
     public class AppSettings
     {
         public string DefaultProvider { get; set; } = "OpenAI";
-        public string DefaultTemparature { get; set; } = "0";
         public string DefaultMaxTokens { get; set; } = "1024";
         public string MaxMessages { get; set; } = "30";
-        public string ProviderApiKey { get; set; } = string.Empty;
-        public string ProviderModel { get; set; } = "OpenAI";
         public List<string> AllProviderNames { get; set; } = new List<string>();
 
         public static AppSettings LoadSettings()
@@ -33,7 +30,7 @@ namespace AI_Assistant
             var excludedKeys = new HashSet<string>
         {
             "DefaultProvider",
-            "DefaultTemparature",
+            "DefaultTemparature", // old global setting; each provider now has its own Temparature
             "DefaultMaxTokens"
         };
 
@@ -52,18 +49,15 @@ namespace AI_Assistant
             var settings = new AppSettings
             {
                 DefaultProvider = defaultProvider,
-                DefaultTemparature = configuration["LLM:DefaultTemparature"],
                 DefaultMaxTokens = configuration["LLM:DefaultMaxTokens"],
                 MaxMessages = configuration["Conversation:DefaultMaxMessages"],
-                ProviderApiKey = configuration[$"LLM:{defaultProvider}:ApiKey"],
-                ProviderModel = configuration[$"LLM:{defaultProvider}:Model"],
                 AllProviderNames = providerNames
             };
 
             return settings;
         }
 
-        public (string ApiKey, string Model) GetProviderDetails(string provider)
+        public (string ApiKey, string Model, double Temperature, ReasoningEffort? ReasoningEffort) GetProviderDetails(string provider)
         {
             if (string.IsNullOrWhiteSpace(provider))
                 throw new ArgumentException("Provider name must not be empty.", nameof(provider));
@@ -76,7 +70,18 @@ namespace AI_Assistant
             string apiKey = configuration[$"LLM:{provider}:ApiKey"];
             string model = configuration[$"LLM:{provider}:Model"];
 
-            return (apiKey ?? string.Empty, model ?? string.Empty);
+            // The provider's own value first, then the old global one, then the built-in default.
+            string temperatureText = configuration[$"LLM:{provider}:Temparature"] ?? configuration["LLM:DefaultTemparature"];
+            double temperature = double.TryParse(temperatureText, NumberStyles.Float, CultureInfo.InvariantCulture, out var parsed)
+                ? parsed
+                : Constants.LLM.DefaultTemperature;
+
+            // The thinking level of the provider; missing, "Default" or anything unknown means the provider decides (null).
+            ReasoningEffort? reasoningEffort = Enum.TryParse(configuration[$"LLM:{provider}:ReasoningEffort"], true, out ReasoningEffort effort) && Enum.IsDefined(effort)
+                ? effort
+                : null;
+
+            return (apiKey ?? string.Empty, model ?? string.Empty, temperature, reasoningEffort);
         }
     }
 }

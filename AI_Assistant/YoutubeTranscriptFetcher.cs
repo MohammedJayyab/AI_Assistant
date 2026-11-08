@@ -1,4 +1,3 @@
-using System;
 using Python.Runtime;
 
 namespace AI_Assistant
@@ -64,6 +63,10 @@ namespace AI_Assistant
         {
             if (_isInitialized)
             {
+                using (Py.GIL())
+                {
+                    (_serviceInstance as PyObject)?.Dispose(); // release the Python object before the runtime goes away
+                }
                 PythonEngine.Shutdown();
                 _isInitialized = false;
             }

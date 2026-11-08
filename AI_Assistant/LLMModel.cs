@@ -1,4 +1,5 @@
 ﻿using LLMKit;
+using LLMKit.Models;
 using LLMKit.Providers;
 
 namespace AI_Assistant
@@ -10,9 +11,9 @@ namespace AI_Assistant
         public string Model = string.Empty;
         public int MaxTokens = Constants.LLM.DefaultMaxTokens;
         public double Temperature = Constants.LLM.DefaultTemperature;
+        public ReasoningEffort? ReasoningEffort; // the thinking level; null = the provider decides
         public int MaxMessages = Constants.LLM.MaxMessages;
-        public string ProviderWithModel = string.Empty;
-        public string SystemMessage = string.Empty;
+        public string Provider = string.Empty;
     }
 
     public class LLMModelFactory
@@ -38,7 +39,7 @@ namespace AI_Assistant
                 }
 
                 string providerName = appSettings.DefaultProvider;
-                var (apiKey, model) = appSettings.GetProviderDetails(providerName);
+                var (apiKey, model, temperature, reasoningEffort) = appSettings.GetProviderDetails(providerName);
                 if (string.IsNullOrEmpty(apiKey) || string.IsNullOrEmpty(model) || apiKey.StartsWith("YOUR-"))
                 {
                     throw new Exception($"API Key or Model is missing for provider '{providerName}' in '{Constants.LLM.AppSettingsJsonFile}'");
@@ -47,23 +48,24 @@ namespace AI_Assistant
                 _lLMModel.ApiKey = apiKey;
                 _lLMModel.Model = model;
                 _lLMModel.MaxTokens = int.TryParse(appSettings.DefaultMaxTokens, out var maxTokens) ? maxTokens : Constants.LLM.DefaultMaxTokens;
-                _lLMModel.Temperature = double.TryParse(appSettings.DefaultTemparature, out var temperature) ? temperature : Constants.LLM.DefaultTemperature;
+                _lLMModel.Temperature = temperature;
+                _lLMModel.ReasoningEffort = reasoningEffort;
                 _lLMModel.MaxMessages = int.TryParse(appSettings.MaxMessages, out var maxMessages) ? maxMessages : Constants.LLM.DefaultMaxMessages;
 
                 if (providerName == Constants.Providers.Gemini.ToString())
-                    _lLMModel.Client = new LLMClient(new GeminiProvider(_lLMModel.ApiKey, _lLMModel.Model), _lLMModel.MaxTokens, _lLMModel.Temperature, _lLMModel.MaxMessages);
+                    _lLMModel.Client = new LLMClient(new GeminiProvider(_lLMModel.ApiKey, _lLMModel.Model), _lLMModel.MaxTokens, _lLMModel.Temperature, _lLMModel.MaxMessages, _lLMModel.ReasoningEffort);
                 else if (providerName == Constants.Providers.OpenAI.ToString())
-                    _lLMModel.Client = new LLMClient(new OpenAIProvider(_lLMModel.ApiKey, _lLMModel.Model), _lLMModel.MaxTokens, _lLMModel.Temperature, _lLMModel.MaxMessages);
+                    _lLMModel.Client = new LLMClient(new OpenAIProvider(_lLMModel.ApiKey, _lLMModel.Model), _lLMModel.MaxTokens, _lLMModel.Temperature, _lLMModel.MaxMessages, _lLMModel.ReasoningEffort);
                 else if (providerName == Constants.Providers.DeepSeek.ToString())
-                    _lLMModel.Client = new LLMClient(new DeepSeekProvider(_lLMModel.ApiKey, _lLMModel.Model), _lLMModel.MaxTokens, _lLMModel.Temperature, _lLMModel.MaxMessages);
+                    _lLMModel.Client = new LLMClient(new DeepSeekProvider(_lLMModel.ApiKey, _lLMModel.Model), _lLMModel.MaxTokens, _lLMModel.Temperature, _lLMModel.MaxMessages, _lLMModel.ReasoningEffort);
                 else if // for anthropic provider
                     (providerName == Constants.Providers.Anthropic.ToString())
-                    _lLMModel.Client = new LLMClient(new AnthropicProvider(_lLMModel.ApiKey, _lLMModel.Model), _lLMModel.MaxTokens, _lLMModel.Temperature, _lLMModel.MaxMessages);
+                    _lLMModel.Client = new LLMClient(new AnthropicProvider(_lLMModel.ApiKey, _lLMModel.Model), _lLMModel.MaxTokens, _lLMModel.Temperature, _lLMModel.MaxMessages, _lLMModel.ReasoningEffort);
                 else
                     throw new Exception($"Unsupported provider: {providerName}");
-                _lLMModel.Client.SetSystemMessage(Constants.SystemMessages.Default);
+                _lLMModel.Client.SetSystemMessage(PromptStore.GetSystemMessage(Constants.Prompts.Default));
 
-                _lLMModel.ProviderWithModel = $"{providerName} - {_lLMModel.Model} - Max Token: '{_lLMModel.MaxTokens}' - Temp.: '{_lLMModel.Temperature}' - Max Messages: '{_lLMModel.MaxMessages}'";
+                _lLMModel.Provider = providerName;
 
                 return _lLMModel;
             }
