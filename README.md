@@ -4,6 +4,9 @@ A powerful Windows Forms application that provides a user-friendly interface for
 The application supports multiple AI providers, image analysis, and specialized AI tasks.
 
 ![UI Assistant Screenshot](https://raw.githubusercontent.com/MohammedJayyab/AI_Assistant/master/AI_Assistant/images/UI_Assistant.png)
+
+*An HTML answer with an illustration. The title shows the model in use; the status bar shows the provider, the model, max tokens, the temperature (`not used` while the model thinks), the thinking level highlighted in yellow, the messages in the LLM context and the tokens reported by the provider.*
+
 ## Features
 
 - 🤖 **Multiple AI Providers**
@@ -46,6 +49,7 @@ The application supports multiple AI providers, image analysis, and specialized 
   - A cut-off or empty summary does not compact the conversation: the current context is kept and a message explains why
   - **Copy Last Response** copies the last answer; every message also has its own Copy button, under the text on the right
   - **Edit** (on the last question): change it and press **Send** to replace the question and its answer, in the LLM context, the chat and the history
+  - **Re-Generate** (on the last answer): asks the same question again, with the same prompt and image, and the new answer replaces the last one in place, in the LLM context, the chat and the history. If no new answer comes (an error or an empty answer), the previous one is kept
 
 - 📊 **Status Bar**
   - Shows the provider, the model (bold), max tokens, temperature, thinking level and messages; clicking any of them opens the Settings
