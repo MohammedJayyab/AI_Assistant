@@ -74,7 +74,8 @@ namespace AI_Assistant
         {
             OpenAI,
             Gemini,
-            DeepSeek
+            DeepSeek,
+            Anthropic
         }
     }
 }

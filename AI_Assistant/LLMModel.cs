@@ -56,7 +56,11 @@ namespace AI_Assistant
                     _lLMModel.Client = new LLMClient(new OpenAIProvider(_lLMModel.ApiKey, _lLMModel.Model), _lLMModel.MaxTokens, _lLMModel.Temperature, _lLMModel.MaxMessages);
                 else if (providerName == Constants.Providers.DeepSeek.ToString())
                     _lLMModel.Client = new LLMClient(new DeepSeekProvider(_lLMModel.ApiKey, _lLMModel.Model), _lLMModel.MaxTokens, _lLMModel.Temperature, _lLMModel.MaxMessages);
-
+                else if // for anthropic provider
+                    (providerName == Constants.Providers.Anthropic.ToString())
+                    _lLMModel.Client = new LLMClient(new AnthropicProvider(_lLMModel.ApiKey, _lLMModel.Model), _lLMModel.MaxTokens, _lLMModel.Temperature, _lLMModel.MaxMessages);
+                else
+                    throw new Exception($"Unsupported provider: {providerName}");
                 _lLMModel.Client.SetSystemMessage(Constants.SystemMessages.Default);
 
                 _lLMModel.ProviderWithModel = $"{providerName} - {_lLMModel.Model} - Max Token: '{_lLMModel.MaxTokens}' - Temp.: '{_lLMModel.Temperature}' - Max Messages: '{_lLMModel.MaxMessages}'";
